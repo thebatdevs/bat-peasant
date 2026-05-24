@@ -7,8 +7,11 @@ This file is the entrypoint for AI coding agents. Its purpose is to explain how 
 ## Core Rule
 
 Before modifying, generating, refactoring, reviewing, or debugging code, inspect the relevant files under `.ai/`.
-
 Do not guess project conventions when a matching workflow, standard, example, decision, or documentation file exists.
+
+## Tech stack information
+
+This project uses following technologies:
 
 ## Repository Memory Structure
 
