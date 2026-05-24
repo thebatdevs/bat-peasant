@@ -14,18 +14,18 @@ Do not guess project conventions when a matching workflow, standard, example, de
 
 ```md
 .ai/
-context/ Project-specific business, domain, and product context
-decisions/ Architecture and technical decisions
-docs/ Internal package, tool, framework, and integration documentation
-examples/ Reference examples of preferred implementation patterns
-maintenance/ Guides for keeping memory files accurate and up to date
-prompts/ Reusable task prompts
-standards/ Coding, naming, project structure, testing, and review standards
-testing/ Test framework setup, test patterns, and test examples
-workflow/ Step-by-step workflows for common engineering tasks
+├── context/ # Project-specific business, domain, and product context
+├── decisions/ # Architecture and technical decisions
+├── docs/ # Internal package, tool, framework, and integration documentation
+├── examples/ # Reference examples of preferred implementation patterns
+├── maintenance/ # Guides for keeping memory files accurate and up to date
+├── prompts/ # Reusable task prompts
+├── standards/ # Coding, naming, project structure, testing, and review standards
+├── testing/ # Test framework setup, test patterns, and test examples
+└── workflow/ # Step-by-step workflows for common engineering tasks
 
 .github/
-copilot-instructions.md
+└── copilot-instructions.md
 
 AGENT.md
 ```
