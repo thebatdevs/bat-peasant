@@ -1,82 +1,32 @@
-# Context Documentation Standard: Mono-Project Business Logic
+# Mono-Project Business Logic Context Standard
 
-This standard defines how to document business logic context for `bat-peasant` in mono-project repositories.
+Purpose: document only the business logic needed for AI agents to safely modify a mono-project without loading the full repository.
 
-The goal is to give AI coding agents enough business context to safely modify code without loading the full project.
+## File Rule
 
-## File Naming
-
-For mono-projects, use business logic context files based on project size.
-
-### Small Project
-
-Use one file for the whole project.
+Store business logic context files in:
 
 ```txt
-context.business-logic.md
-```
-
-### Medium or Large Project
-
-Use one file per service/entity.
-
-```md
-<service-or-entity>.business-logic.md
-```
-
-Examples:
-
-```markdown
-withdraw-request.business-logic.md
-custom-config.business-logic.md
-user-payment-address.business-logic.md
-```
-
-## File Location
-
-Store business logic context files in the project context directory.
-
-Recommended location:
-
-```markdown
 .ai/context/
-context.business-logic.md
 ```
 
-Or for medium/large projects:
+For small projects, use one file:
 
-```markdown
-.ai/context/
-withdraw-request.business-logic.md
-custom-config.business-logic.md
-user-payment-address.business-logic.md
+```txt
+.ai/context/context.business-logic.md
 ```
 
-Do not create a separate business-logic/ subfolder.
+For medium or large projects, use one file per service/entity:
 
-## Mono-Project Rule
-
-For mono-projects, document business logic by service/entity when the project has multiple clear service domains.
-
-Good:
-
-```markdown
-withdraw-request.business-logic.md
-custom-config.business-logic.md
-user-payment-address.business-logic.md
+```txt
+.ai/context/withdraw-request.business-logic.md
+.ai/context/custom-config.business-logic.md
+.ai/context/user-payment-address.business-logic.md
 ```
 
-Acceptable for small projects:
+Do not create a separate `business-logic/` subfolder.
 
-```markdown
-context.business-logic.md
-```
-
-Reason:
-
-A mono-project does not have sub-project boundaries like a monorepo. Service/entity files give the agent focused context without loading unrelated business logic.
-
-## When to Use One File
+## Split Rule
 
 Use one `context.business-logic.md` file when:
 
@@ -85,58 +35,41 @@ Use one `context.business-logic.md` file when:
 - most flows are tightly related
 - the file can stay under 300 lines
 
-Example:
-
-```text
-.ai/context/context.business-logic.md
-```
-
-## When to Split by Service/Entity
-
-Use one file per service/entity when:
+Split by service/entity when:
 
 - the project has many service folders
 - business flows are independent
 - one context file becomes too large
-- the agent often works on one service at a time
+- the agent usually works on one service at a time
 
-Example project structure:
+Example service/entity split:
 
-```text
-src/
-  services/
-    withdraw-request/
-    custom-config/
-    user-payment-address/
+```txt
+src/services/withdraw-request/
+src/services/custom-config/
+src/services/user-payment-address/
+
+.ai/context/withdraw-request.business-logic.md
+.ai/context/custom-config.business-logic.md
+.ai/context/user-payment-address.business-logic.md
 ```
 
-Recommended context files:
+## Include Only
 
-```text
-.ai/context/
-  withdraw-request.business-logic.md
-  custom-config.business-logic.md
-  user-payment-address.business-logic.md
-```
-
-## What to Document
-
-Document only business logic.
-
-Include:
+Document:
 
 - service/entity purpose
 - entities
-- main flows
+- main business flows
 - service responsibilities
 - repository responsibilities
 - statuses
 - business rules
 - side effects
 - external dependencies
-- important agent notes
+- agent warnings
 
-Exclude:
+Do not document:
 
 - generic TypeScript rules
 - code style rules
@@ -144,32 +77,32 @@ Exclude:
 - full API documentation
 - full schema definitions
 - obvious implementation details
-- line-by-line code explanations
+- line-by-line code behavior
 
 ## Required Template
 
-Use this template for every mono-project business logic file.
+Use this format for every mono-project business logic file.
 
-```markdown
+```md
 # <service-or-project> Business Logic
 
 Path: `<service/project path>`
 
-Purpose: `<one sentence explaining what this service/project does>`
+Purpose: `<one sentence>`
 
 Pattern: Function -> Handler -> Service -> Repository -> Storage/External API
 
 ## Entities
 
-- `<entity-name>`: `<short business meaning>`; storage=`<table/external/none>`
+- `<entity>`: `<business meaning>`; storage=`<table/external/none>`
 
 ## Flows
 
-### `<flow-name>`
+### `<flow name>`
 
 Entry: `<api/function/handler>`
 Service: `<main service function>`
-Repositories: `<repository functions>`
+Repositories: `<important repository functions>`
 
 Steps:
 
@@ -177,7 +110,7 @@ Steps:
 2. `<business step>`
 3. `<business step>`
 
-Side effects: `<DynamoDB write / Lambda invoke / external API call / notification / none>`
+Side effects: `<state change / external call / none>`
 
 Statuses:
 
@@ -194,135 +127,94 @@ Errors:
 
 ## External Dependencies
 
-- `<dependency>`: `<why it is used>`
+- `<dependency>`: `<why used>`
 
 ## Agent Notes
 
-- `<important implementation warning>`
+- `<implementation warning>`
 - `<what must not be changed casually>`
 ```
 
 ## Field Rules
 
-### Path
+| Field        | Rule                                                                                                       |
+| ------------ | ---------------------------------------------------------------------------------------------------------- |
+| Path         | Use the real project path, for example `src/services/withdraw-request`. Use `.` for whole-project context. |
+| Purpose      | One sentence only.                                                                                         |
+| Entities     | Real business concepts only, not every type/schema.                                                        |
+| Flows        | Business behavior, not code internals.                                                                     |
+| Steps        | Short, business-focused, ordered.                                                                          |
+| Repositories | List only repository functions relevant to the flow.                                                       |
+| Side effects | Include DynamoDB writes, Lambda invokes, external API calls, notifications, or `none`.                     |
+| Statuses     | Document only statuses used by this service/entity.                                                        |
+| Rules        | Preserve business invariants.                                                                              |
+| Errors       | Include meaningful business errors only.                                                                   |
+| Agent Notes  | Add warnings that prevent unsafe agent changes.                                                            |
 
-Use the real project path.
+## Compact Example
 
-Example:
+```md
+# withdraw-request Business Logic
 
-```text
 Path: `src/services/withdraw-request`
-```
 
-For a small mono-project using one file:
-
-```text
-Path: `.`
-```
-
-### Purpose
-
-Keep it to one sentence.
-
-Good:
-
-```text
 Purpose: Manages user withdrawal request creation and status changes.
-```
+
+Pattern: Function -> Handler -> Service -> Repository -> Storage/External API
 
 ## Entities
 
-Entities should map to real business concepts.
-
-Example:
-
 - `withdraw-request`: user withdrawal request; storage=`withdraw-request-table`
 - `custom-config`: withdrawal limits and fee config; storage=`custom-config-table`
-  Flows
+- `user-payment-address`: saved payout address; storage=`user-payment-address-table`
 
-Flow names should describe business behavior.
+## Flows
 
-```text
 ### Create withdraw request
-### Approve withdraw request
-### Reject withdraw request
-### Sync withdraw status
-```
 
-### Steps
-
-Steps must be short and business-focused.
-
-Good:
+Entry: `POST /withdraw`
+Service: `createWithdrawRequest`
+Repositories: `createWithdrawRequest`, `getCustomConfigByKey`, `getUserPaymentAddressById`
 
 Steps:
 
 1. Validate request body.
 2. Load withdrawal config.
-3. Check amount limits.
-4. Create request with `PENDING` status.
+3. Check user restriction and KYC status.
+4. Validate amount and payout address.
+5. Create request with `PENDING` status.
 
-Bad:
-
-### Repositories
-
-Only list repository functions that matter to the flow.
-
-Example:
-
-Repositories: `createWithdrawRequest`, `getWithdrawRequestById`, `updateWithdrawRequestStatus`
-
-### Side Effects
-
-List effects that change system state or call another system.
-
-Examples:
-
-Side effects: DynamoDB create
-Side effects: DynamoDB update; bank transfer API call
-Side effects: Lambda invoke for restriction check
-Side effects: none
-
-### Statuses
-
-Document only statuses used by this service/entity.
-
-Example:
+Side effects: DynamoDB create; Lambda invoke for user eligibility check
 
 Statuses:
 
 - `PENDING`: request created and waiting for processing
-- `APPROVED`: request approved for transfer
-- `REJECTED`: request rejected before transfer
-- `SUCCESSFUL`: transfer completed successfully
-- `FAILED`: transfer failed
-
-### Rules
-
-Rules are business invariants the agent must preserve.
-
-Example:
 
 Rules:
 
-- A user cannot create a withdrawal if restriction check fails.
+- User cannot withdraw if restriction or KYC check fails.
 - Amount must be within configured min/max limits.
-- Status transitions must be explicit.
 - Repository functions must not contain business validation.
-
-### Errors
-
-Only document meaningful business errors.
-
-Example:
+- Status transitions must be explicit.
 
 Errors:
 
-- `CONFIG_NOT_FOUND`: required config is missing
+- `CONFIG_NOT_FOUND`: required withdrawal config is missing
 - `USER_NOT_ALLOWED`: user failed restriction or KYC validation
 - `INVALID_AMOUNT`: amount violates configured limits
 
-### Update Rule
+## External Dependencies
+
+- `restriction-check`: verifies whether user can withdraw
+- `KYC service`: verifies user identity approval
+
+## Agent Notes
+
+- Do not move business validation into repositories.
+- Do not change status transitions without updating this file.
+```
+
+## Update Rule
 
 Update the related business logic context file when changing:
 
@@ -332,12 +224,12 @@ Update the related business logic context file when changing:
 - external integration behavior
 - service flow
 - repository responsibility
-  -validation that affects business behavior
+- validation that changes business behavior
 
 Do not update it for:
 
-- `formatting changes
+- formatting changes
 - internal refactors with no behavior change
 - test-only changes
-- renaming local variables
-- moving utility functions without business impact
+- local variable renames
+- utility movement with no business impact

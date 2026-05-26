@@ -1,103 +1,75 @@
-# Context Documentation Standard: Monorepo Business Logic
+# Monorepo Business Logic Context Standard
 
-This standard defines how to document business logic context for monorepo projects.
+Purpose: document only the business logic needed for AI agents to safely modify a monorepo scope without loading the full repository.
 
-The goal is to give AI coding agents enough business context to safely modify code without loading the entire repository.
+## File Rule
 
-## File Naming
-
-Use one business logic context file per monorepo scope.
-
-A scope can be:
-
-- stack
-- package
-- service application
-- deployable project
-- bounded business module
-
-Use this naming format:
+Create one file per monorepo scope:
 
 ```txt
-<scope>.business-logic.md
+.ai/context/<scope>.business-logic.md
 ```
 
 Examples:
 
 ```txt
-client-withdraw.business-logic.md
-admin-pay-to-pay.business-logic.md
-bank-deposit-service.business-logic.md
+.ai/context/client-withdraw.business-logic.md
+.ai/context/admin-pay-to-pay.business-logic.md
+.ai/context/bank-deposit-service.business-logic.md
 ```
 
-## File location
-
-Store business logic context files in the project context directory.
-
-Recommended location:
-
-```txt
-.ai/context/
-  client-withdraw.business-logic.md
-  admin-pay-to-pay.business-logic.md
-  bank-deposit-service.business-logic.md
-```
+A scope can be a stack, package, service app, deployable project, or bounded business module.
 
 Do not create a separate `business-logic/` subfolder.
 
-Split into a new `<scope>.business-logic.md` file only when the logic belongs to a different monorepo scope.
+## Include Only
 
-## What to Document
+Document:
 
-Document only business logic.
-
-Include:
-
-- scope purpose
+- purpose
 - entities
-- main flows
+- main business flows
 - service responsibilities
 - repository responsibilities
 - statuses
 - business rules
 - side effects
 - external dependencies
-- important agent notes
+- agent warnings
 
-Exclude:
+Do not document:
 
-- generic code style
-- TypeScript standards
+- generic TypeScript style
 - folder structure explanations
 - full API documentation
 - full schema definitions
 - obvious implementation details
-- line-by-line code explanations
+- line-by-line code behavior
 
 ## Required Template
 
-Use this template for every monorepo scope.
+Use this format for every scope.
 
-```markdown
+```md
 # <scope> Business Logic
 
 Path: `<scope path>`
 
-Purpose: `<one sentence explaining what this scope does>`
+Purpose: `<one sentence>`
 
 Pattern: Function -> Handler -> Service -> Repository -> Storage/External API
 
 ## Entities
 
-- `<entity-name>`: `<short business meaning>`; storage=`<table/external/none>`
+- `<entity>`: `<business meaning>`; storage=`<table/external/none>`
 
 ## Flows
 
-### `<flow-name>`
+### `<flow name>`
 
 Entry: `<api/function/handler>`
 Service: `<main service function>`
-Repositories: `<repository functions>`
+Repositories: `<important repository functions>`
 
 Steps:
 
@@ -105,7 +77,7 @@ Steps:
 2. `<business step>`
 3. `<business step>`
 
-Side effects: `<DynamoDB write / Lambda invoke / external API call / notification / none>`
+Side effects: `<state change / external call / none>`
 
 Statuses:
 
@@ -122,148 +94,95 @@ Errors:
 
 ## External Dependencies
 
-- `<dependency>`: `<why it is used>`
+- `<dependency>`: `<why used>`
 
 ## Agent Notes
 
-- `<important implementation warning>`
+- `<implementation warning>`
 - `<what must not be changed casually>`
 ```
 
-## Field rules
+## Field Rules
 
-### Path
+| Field        | Rule                                                                                   |
+| ------------ | -------------------------------------------------------------------------------------- |
+| Path         | Use the real monorepo path, for example `stacks/client-withdraw`.                      |
+| Purpose      | One sentence only.                                                                     |
+| Entities     | Real business concepts only, not every type/schema.                                    |
+| Flows        | Business behavior, not code internals.                                                 |
+| Steps        | Short, business-focused, ordered.                                                      |
+| Repositories | List only repository functions relevant to the flow.                                   |
+| Side effects | Include DynamoDB writes, Lambda invokes, external API calls, notifications, or `none`. |
+| Statuses     | Document only statuses used by this scope.                                             |
+| Rules        | Preserve business invariants.                                                          |
+| Errors       | Include meaningful business errors only.                                               |
+| Agent Notes  | Add warnings that prevent unsafe agent changes.                                        |
 
-Use the real monorepo path.
+## Compact Example
 
-Example:
+```md
+# client-withdraw Business Logic
 
-```txt
 Path: `stacks/client-withdraw`
-```
 
-### Purpose
-
-Keep it to one sentence.
-
-Good:
-
-```txt
 Purpose: Allows clients to create and track withdrawal requests.
-```
 
-Bad:
+Pattern: Function -> Handler -> Service -> Repository -> Storage/External API
 
-```txt
-Purpose: This scope contains multiple functions, handlers, services, repositories, schemas, constants, utils, and tests for the client withdraw flow.
-```
+## Entities
 
-### Entities
-
-Entities should map to real business concepts.
-
-Example:
-
-```markdown
 - `withdraw-request`: user withdrawal request; storage=`withdraw-request-table`
 - `custom-config`: withdrawal limits and fee config; storage=`custom-config-table`
-- `user-payment-address`: saved user payout address; storage=`user-payment-address-table`
-```
+- `user-payment-address`: saved payout address; storage=`user-payment-address-table`
 
-### Flows
+## Flows
 
-A flow should describe business behavior, not code internals.
-
-Good flow names:
-
-```txt
 ### Create withdraw request
-### Reject withdraw request
-### Sync bank transfer status
-### Get user payment addresses
-```
 
-### Steps
+Entry: `POST /withdraw`
+Service: `createWithdrawRequest`
+Repositories: `createWithdrawRequest`, `getCustomConfigByKey`, `getUserPaymentAddressById`
 
-Steps must be short and business-focused.
-
-Good:
-
-```markdown
 Steps:
 
 1. Validate request body.
 2. Check user restriction and KYC status.
 3. Load withdrawal config.
-4. Validate amount and destination address.
+4. Validate amount and payout address.
 5. Create request with `PENDING` status.
-```
 
-### Repositories
-
-Only list repository functions that matter to the flow.
-
-Example:
-
-```txt
-Repositories: `createWithdrawRequest`, `getCustomConfigByKey`, `getUserPaymentAddressById`
-```
-
-### Side Effects
-
-List effects that change system state or call another system.
-
-Examples:
-
-```txt
-Side effects: DynamoDB create
-Side effects: DynamoDB update; Golomt transfer API call
-Side effects: Lambda invoke for restriction check
-Side effects: none
-```
-
-### Statuses
-
-Document only statuses used by this scope.
-
-Example:
+Side effects: DynamoDB create; Lambda invoke for user eligibility check
 
 Statuses:
 
 - `PENDING`: request created and waiting for processing
-- `APPROVED`: admin approved the request
-- `REJECTED`: request rejected before transfer
-- `SUCCESSFUL`: transfer completed successfully
-- `FAILED`: transfer failed
-
-### Rules
-
-Rules are business invariants the agent must preserve.
-
-Example:
 
 Rules:
 
-- A user cannot create a withdrawal if restriction check fails.
+- User cannot withdraw if restriction or KYC check fails.
 - Amount must be within configured min/max limits.
 - Repository functions must not contain business validation.
-- Status transitions must be explicit.
-
-### Errors
-
-Only document meaningful business errors.
-
-Example:
 
 Errors:
 
-- `CONFIG_NOT_FOUND`: required withdrawal config is missing
+- `CONFIG_NOT_FOUND`: withdrawal config is missing
 - `USER_NOT_ALLOWED`: user failed restriction or KYC validation
-- `INVALID_AMOUNT`: requested amount violates limits
+- `INVALID_AMOUNT`: amount violates limits
 
-### Update Rule
+## External Dependencies
 
-Update the related `<scope>.business-logic.md` file when changing:
+- `restriction-check`: verifies whether user can withdraw
+- `KYC service`: verifies user identity approval
+
+## Agent Notes
+
+- Do not move business validation into repositories.
+- Do not change status transitions without updating this file.
+```
+
+## Update Rule
+
+Update the related `<scope>.business-logic.md` when changing:
 
 - business rules
 - status behavior
@@ -271,12 +190,12 @@ Update the related `<scope>.business-logic.md` file when changing:
 - external integration behavior
 - service flow
 - repository responsibility
-- validation that affects business behavior
+- validation that changes business behavior
 
 Do not update it for:
 
 - formatting changes
 - internal refactors with no behavior change
 - test-only changes
-- renaming local variables
-- moving utility functions without business impact
+- local variable renames
+- utility movement with no business impact

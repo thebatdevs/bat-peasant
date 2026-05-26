@@ -1,87 +1,35 @@
-# Code Writing Standards
+# Code Writing Standard
 
-This standard covers:
+Purpose: define how agents must write, name, structure, validate, and layer code in this project.
 
-- Naming conventions
-- Function structure
-- File structure
-- Error handling
+## Core Principles
 
-## Naming Standards
+- Write clear, explicit, searchable TypeScript.
+- Prefer simple readable code over clever abstractions.
+- Keep functions small, focused, typed, and easy to test.
+- Use early returns. Avoid deep nesting.
+- Validate external input and important business input.
+- Throw meaningful errors.
+- Keep business logic in the Service layer only.
+- Log errors with context using `logErrorMessage(error, '<functionName>')` when available.
+- Return validated domain objects with Zod `.parse()` when appropriate.
+- Document intentional deviations in the relevant `.business-logic.md` file.
 
-Names must be clear, specific, and searchable. Avoid vague names like `data`, `item`, `process`, `handle`, or `helper`.
+## Naming Rules
 
-### File Naming
+| Target       | Rule                       | Example                      |
+| ------------ | -------------------------- | ---------------------------- |
+| Files        | `kebab-case`               | `withdraw-request-create.ts` |
+| Functions    | accurate verb-based names  | `createWithdrawRequest()`    |
+| Services     | business behavior          | `approveWithdrawRequest()`   |
+| Repositories | data access                | `getWithdrawRequestById()`   |
+| Zod schemas  | `camelCase` + `Sch` suffix | `withdrawRequestSch`         |
+| Types        | `PascalCase`               | `WithdrawRequest`            |
+| Constants    | `SCREAMING_SNAKE_CASE`     | `KHAN_BANK_CODE`             |
+| Booleans     | state/question names       | `isActive`, `canWithdraw`    |
+| Arrays       | plural names               | `withdrawRequests`           |
 
-Use `kebab-case`.
-
-```txt
-withdraw-request-create.ts
-withdraw-request-get.ts
-```
-
-### Function Naming
-
-Use accurate verb-based names.
-
-```ts
-createWithdrawRequest();
-getWithdrawRequestById();
-```
-
-#### Repository Function Naming
-
-Repository functions should describe data access.
-
-```ts
-createWithdrawRequest();
-getWithdrawRequestById();
-```
-
-Prefer specific query names when possible:
-
-```ts
-getWithdrawRequestsByEmail();
-getPendingWithdrawRequests();
-```
-
-### Service Function Naming
-
-Service functions should describe business behavior.
-
-```ts
-rejectWithdrawRequest();
-syncWithdrawRequestStatus();
-```
-
-### Schema Naming
-
-Use the `Sch` suffix for Zod schemas.
-
-```ts
-withdrawRequestSch;
-createWithdrawRequestBodySch;
-paymentMethodSch;
-```
-
-Use inferred `PascalCase` types.
-
-```ts
-export type WithdrawRequest = z.infer<typeof withdrawRequestSch>;
-export type CreateWithdrawRequestBody = z.infer<typeof createWithdrawRequestBodySch>;
-```
-
-### Type Naming
-
-Use `PascalCase`.
-
-```ts
-WithdrawRequest;
-CreateWithdrawRequestInput;
-UpdateWithdrawRequestStatusInput;
-```
-
-Use common suffixes consistently:
+Common type suffixes:
 
 ```txt
 Input
@@ -93,40 +41,7 @@ Context
 Config
 ```
 
-### Constants Naming
-
-Use `SCREAMING_SNAKE_CASE`.
-
-```ts
-LOCAL_BANK_WITHDRAW_PAYMENT_METHOD_ID;
-KHAN_BANK_CODE;
-DEFAULT_PAGE_LIMIT;
-```
-
-### Boolean Naming
-
-Boolean variables should read like states or questions.
-
-```ts
-isActive;
-hasPermission;
-canWithdraw;
-shouldRetry;
-```
-
-### Collection Naming
-
-Use plural names for arrays.
-
-```ts
-withdrawRequests;
-paymentMethods;
-bankAccounts;
-```
-
-### Golden Rule
-
-A good name should reveal:
+Name formula:
 
 ```txt
 action + domain + condition/key
@@ -140,7 +55,7 @@ approveWithdrawRequest();
 validateUserPaymentAddress();
 ```
 
-Bad:
+Avoid:
 
 ```ts
 getData();
@@ -148,69 +63,40 @@ processRequest();
 handleUpdate();
 ```
 
-## Function Writing Standards
+Also avoid vague names like `data`, `item`, `process`, `handle`, `helper`, `utils`, and `common` unless the content is truly generic.
 
-Functions must be small, focused, typed, and easy to test.
+## Function Rules
 
-A function should:
+Every exported function should:
 
-- Do one clear thing.
-- Have explicit input and output types.
-- Use accurate naming.
-- Validate important input.
-- Throw meaningful errors.
-- Avoid hidden side effects.
-- Use a single `try/catch` block when error logging is needed.
-- Avoid deeply nested conditions.
-- Prefer early returns.
-- Log errors with function context.
-- Use `logErrorMessage` for error logging if it is available in the repository.
-- Have JSDoc for exported functions.
+- have an accurate, specific name
+- use explicit input and output types
+- include JSDoc
+- do one clear thing
+- use one `try/catch` only when logging is needed
+- throw meaningful business errors
+- avoid hidden side effects
+- return validated domain objects when possible
 
 JSDoc should include:
 
-- What the function does.
-- Process flow for complex functions.
-- Parameters.
-- Return value.
-- Expected thrown errors.
+- purpose
+- process flow for complex functions
+- params
+- return value
+- expected thrown errors
 
-Template:
-
-```ts
-/**
- * Short description of what the function does.
- *
- * Process flow:
- * 1. First important step.
- * 2. Second important step.
- * 3. Third important step.
- *
- * @param input - Description of the input object.
- * @returns Description of the returned value.
- * @throws CustomError when a known business rule fails.
- */
-```
-
-## Preferred Function Structure
+Preferred structure:
 
 ```ts
-type UpdateWithdrawRequestStatusInput = {
-  withdrawRequestId: string;
-  nextStatus: PaymentRequestStatus;
-  executor: string;
-  ipAddress: string;
-};
-
 /**
  * Updates a withdraw request status after validating the current status transition.
  *
  * Process flow:
  * 1. Gets the existing withdraw request by id.
  * 2. Validates that the requested status transition is allowed.
- * 3. Creates an update history record.
- * 4. Persists the updated status.
- * 5. Returns the validated updated withdraw request.
+ * 3. Persists the updated status.
+ * 4. Returns the validated updated withdraw request.
  *
  * @param input - Status update input.
  * @returns The updated withdraw request.
@@ -219,20 +105,18 @@ type UpdateWithdrawRequestStatusInput = {
  */
 export async function updateWithdrawRequestStatus(input: UpdateWithdrawRequestStatusInput): Promise<WithdrawRequest> {
   try {
-    const { withdrawRequestId, nextStatus, executor, ipAddress } = input;
-
-    const withdrawRequest = await getValidWithdrawRequestById(withdrawRequestId);
+    const withdrawRequest = await getValidWithdrawRequestById(input.withdrawRequestId);
 
     validateWithdrawRequestStatusTransition({
       currentStatus: withdrawRequest.status,
-      nextStatus,
+      nextStatus: input.nextStatus,
     });
 
     const updatedWithdrawRequest = await updateWithdrawRequestStatusRepo({
       withdrawRequest,
-      nextStatus,
-      executor,
-      ipAddress,
+      nextStatus: input.nextStatus,
+      executor: input.executor,
+      ipAddress: input.ipAddress,
     });
 
     return withdrawRequestSch.parse(updatedWithdrawRequest);
@@ -243,52 +127,23 @@ export async function updateWithdrawRequestStatus(input: UpdateWithdrawRequestSt
 }
 ```
 
-## File Size and Function Splitting
+## File Structure and Size
 
-A single source file should not be longer than **300 lines**.
-
-If a file grows beyond 300 lines, split it into smaller files by operation or responsibility.
-
-Preferred structure:
-
-```txt
-src/
-  services/
-    user-bank-deposit/
-      index.ts
-      user-bank-deposit-bank-convert.ts
-      user-bank-deposit-create.ts
-      user-bank-deposit-get.ts
-      user-bank-deposit-solve.ts
-      user-bank-deposit-update.ts
-```
-
-Use `index.ts` as the public export file for that folder.
-
-Example:
-
-```ts
-export * from './user-bank-deposit-bank-convert';
-export * from './user-bank-deposit-create';
-export * from './user-bank-deposit-get';
-export * from './user-bank-deposit-solve';
-export * from './user-bank-deposit-update';
-```
-
-When splitting a large file:
-
-- Group related functions inside a folder.
-- Keep each file focused on one operation.
+- Keep a single source file under **300 lines**.
+- Split large files by operation or responsibility.
+- Use `index.ts` as the public export file for a folder.
 - Prefer operation-based files.
-- Do not create vague files like `utils.ts`, `helper.ts`, or `common.ts` unless the content is truly generic.
+- Avoid vague files like `utils.ts`, `helper.ts`, or `common.ts` unless truly generic.
 
 Good:
 
 ```txt
-withdraw-request-create.ts
-withdraw-request-get.ts
-withdraw-request-update.ts
-withdraw-request-validation.ts
+src/services/withdraw-request/
+  index.ts
+  withdraw-request-create.ts
+  withdraw-request-get.ts
+  withdraw-request-update.ts
+  withdraw-request-validation.ts
 ```
 
 Bad:
@@ -299,13 +154,11 @@ withdraw-request-utils.ts
 withdraw-request-functions.ts
 ```
 
-## Reusable Validation and Lookup Functions
+## Reusable Validation and Lookup Helpers
 
-If a lookup, validation, or guard check is reusable, extract it into a separate focused function.
+Extract repeated lookup, validation, or guard logic into focused service-layer functions.
 
-Validation and lookup helpers should stay in the service layer unless they are purely schema-level validation.
-
-Avoid repeating this logic in multiple service functions:
+Avoid repeating:
 
 ```ts
 const withdrawRequest = await getWithdrawRequestById(withdrawRequestId);
@@ -321,170 +174,105 @@ Prefer:
 const withdrawRequest = await getValidWithdrawRequestById(withdrawRequestId);
 ```
 
-Example:
+Validation and lookup helpers should stay in the Service layer unless they are purely schema-level validation.
 
-```ts
-/**
- * Gets a withdraw request by id and throws if it does not exist.
- *
- * @param id - Withdraw request id.
- * @returns The validated withdraw request.
- * @throws CustomError when the withdraw request does not exist.
- */
-export async function getValidWithdrawRequestById(id: string): Promise<WithdrawRequest> {
-  try {
-    const withdrawRequest = await getWithdrawRequestById(id);
+## Layer Responsibilities
 
-    if (!withdrawRequest) {
-      throw new CustomError('Withdraw request not found', 404, 'WITHDRAW_REQUEST_NOT_FOUND');
-    }
-
-    return withdrawRequestSch.parse(withdrawRequest);
-  } catch (error: unknown) {
-    logErrorMessage(error, 'getValidWithdrawRequestById');
-    throw error;
-  }
-}
-```
-
-## Layer Responsibility Standard
-
-Code should follow this flow:
+Code must follow this flow:
 
 ```txt
-Entry Function / Handler / Route
-  → Service
-  → Repository
+Entry / Handler / Route
+  -> Service
+  -> Repository
+  -> Storage / External API
 ```
 
-Each layer must have one responsibility.
+## Entry / Handler / Route
 
-### Entry Function / Handler / Route
+May:
 
-The entry layer receives external input and returns external output.
+- parse request body, path params, and query params
+- validate request input
+- extract request metadata
+- call service functions
+- format API responses
 
-It may:
+Must not:
 
-- Parse request body, path params, and query params.
-- Validate request input.
-- Extract request metadata.
-- Call service functions.
-- Format API responses.
+- contain business logic
+- call repositories directly
+- build database queries
+- perform complex workflow decisions
 
-It must not:
+## Service Layer
 
-- Contain business logic.
-- Call repositories directly.
-- Build database queries.
-- Perform complex workflow decisions.
+May:
 
-Good:
+- validate business rules
+- call repositories
+- call other services
+- orchestrate workflows
+- throw business errors
+- return validated domain objects
 
-```ts
-export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-  try {
-    const body = createWithdrawRequestBodySch.parse(JSON.parse(event.body ?? '{}'));
+Must not:
 
-    const result = await validateAndCreateWithdrawRequest(body);
+- know about API Gateway, Express `req/res`, or HTTP response formatting
+- build low-level database commands
+- return raw database client responses
 
-    return formatApiResponse(200, result);
-  } catch (error: unknown) {
-    return formatApiErrorResponse(error);
-  }
-}
-```
+## Repository Layer
 
-### Service Layer
+May:
 
-The service layer owns business behavior.
+- build database query commands
+- call DynamoDB, PostgreSQL, S3, or external persistence APIs
+- map raw database output into typed objects
+- handle pagination keys
 
-It may:
+Must not:
 
-- Validate business rules.
-- Call repositories.
-- Call other services.
-- Orchestrate workflows.
-- Throw business errors.
-- Return validated domain objects.
+- contain business rules
+- format API responses
+- call service functions
+- decide whether an operation is allowed
 
-It must not:
+## Dependency Direction
 
-- Know about API Gateway, Express `req/res`, or HTTP response formatting.
-- Build low-level database commands.
-- Return raw database client responses.
-
-Good:
-
-```ts
-export async function validateAndCreateWithdrawRequest(input: CreateWithdrawRequestInput): Promise<WithdrawRequest> {
-  try {
-    validateUserCanWithdraw(input);
-
-    const newWithdrawRequest = buildWithdrawRequest(input);
-
-    const createdWithdrawRequest = await createWithdrawRequestRepo(newWithdrawRequest);
-
-    return withdrawRequestSch.parse(createdWithdrawRequest);
-  } catch (error: unknown) {
-    logErrorMessage(error, 'validateAndCreateWithdrawRequest');
-    throw error;
-  }
-}
-```
-
-### Repository Layer
-
-The repository layer owns data access.
-
-It may:
-
-- Build database query commands.
-- Call DynamoDB, PostgreSQL, S3, or external persistence APIs.
-- Map raw database output into typed objects.
-- Handle pagination keys.
-
-It must not:
-
-- Contain business rules.
-- Format API responses.
-- Call service functions.
-- Decide whether an operation is allowed.
-
-Good:
-
-```ts
-export async function createWithdrawRequestRepo(input: WithdrawRequest): Promise<WithdrawRequest> {
-  await createRecordOnDynamo({
-    tableName: TABLE_NAME,
-    item: input,
-    conditionExpression: 'attribute_not_exists(id)',
-  });
-
-  return withdrawRequestSch.parse(input);
-}
-```
-
-### Dependency Rule
-
-Imports should follow one direction only:
+Imports must flow one way only:
 
 ```txt
-Entry Layer → Service Layer → Repository Layer
+Entry -> Service -> Repository -> Storage / External API
 ```
 
 Allowed:
 
 ```txt
-handler.ts    → service.ts
-service.ts    → repository.ts
-repository.ts → database client
+handler.ts    -> service.ts
+service.ts    -> repository.ts
+repository.ts -> database client
 ```
 
 Forbidden:
 
 ```txt
-repository.ts → service.ts
-repository.ts → handler.ts
-service.ts    → handler.ts
-handler.ts    → repository.ts
+repository.ts -> service.ts
+repository.ts -> handler.ts
+service.ts    -> handler.ts
+handler.ts    -> repository.ts
 ```
+
+## Agent Checklist
+
+Before writing or changing code, confirm:
+
+- names are specific and searchable
+- exported functions have useful JSDoc
+- business logic is only in the Service layer
+- handlers only parse, validate, delegate, and format
+- repositories only perform data access
+- reusable validation or lookup logic is extracted
+- files are focused and under 300 lines when possible
+- errors are meaningful and logged with function context
+- returned domain objects are validated with Zod when appropriate
+- intentional deviations are documented in the relevant `.business-logic.md` file

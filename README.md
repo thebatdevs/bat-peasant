@@ -1,6 +1,6 @@
 # `bat-peasant`
 
-`bat-peasant` is a simple personalized coding agent memory system.
+> `bat-peasant` is a personalized coding-agent memory system packaged as a reusable project template.
 
 The goal of this project is to help AI coding agents understand a repository before they modify it. Instead of acting like a generic AI coding tool, `bat-peasant` gives the agent structured access to project context, engineering standards, workflow rules, implementation examples, technical decisions, and maintenance guides.
 
