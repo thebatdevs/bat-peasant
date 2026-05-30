@@ -1,104 +1,113 @@
-# AGENT.md
+# AGENTS.md
 
-**Purpose**: This is the entrypoint for all AI coding agents. This repository uses `.ai/` as its project-specific memory system. **Always inspect relevant `.ai/` files before changing code instead of guessing.**
+Purpose: Baseline entrypoint for AI coding agents. This repo may include `.ai/` as project memory. Use `.ai/` when the prompt contains `#BAT`, when the user asks for memory/workflows/standards/docs, or when extra context materially improves correctness.
 
 ## Core Rule
 
-Before modifying, generating, refactoring, reviewing, debugging, or testing code:
+Before changing code:
 
-1. Identify the task type.
-2. Read the closest matching workflow in `.ai/workflow/`.
-3. Read all files referenced by that workflow.
-4. Follow existing patterns and make the **smallest correct change**.
-5. Update relevant `.ai/` memory if behavior changes.
+1. Identify task type.
+2. Check nearby code first.
+3. If prompt includes `#BAT`, use `.ai/`.
+4. Otherwise, use `.ai/` only when the task is broad, risky, unfamiliar, changes behavior, or nearby code is insufficient.
+5. When using `.ai/`, start with the closest `.ai/workflow/*.workflow.md` and read files referenced by that workflow.
+6. Follow existing patterns and make the smallest correct change.
+7. Update `.ai/` memory only when the change affects future agent behavior.
 
-If no workflow matches, inspect `.ai/context/`, `.ai/standards/`, `.ai/examples/`, `.ai/docs/`, and `.ai/decisions/`.
+Actual repository code is the source of truth. `.ai/` guides implementation but must be checked against current code.
 
-## Repository Memory Structure
+## Task Routing
 
-```markdown
+```txt
+New feature       -> .ai/workflow/new-feature.workflow.md
+Bug/debug         -> .ai/workflow/debug.workflow.md
+Local refactor    -> .ai/workflow/local-refactor.workflow.md
+External refactor -> .ai/workflow/external-refactor.workflow.md
+Tests             -> relevant workflow + .ai/testing/
+Memory update     -> .ai/maintenance/
+```
+
+If no workflow matches, inspect only the relevant `.ai/` files.
+
+## When to Use `.ai/`
+
+Use `.ai/` for:
+
+- `#BAT` prompts
+- Explicit requests for project memory, workflows, standards, examples, docs, or decisions
+- Business logic, architecture, testing, public behavior, or convention changes
+- Unclear implementation patterns
+- Changes that should be remembered by future agents
+
+Skip `.ai/` for:
+
+- Narrow local edits
+- Mechanical/self-contained changes
+- Documentation-only changes where memory would not affect the result
+- Tasks fully explained by the user and nearby code
+
+For `#BAT`, mention in the final response that `.ai/` instructions were used.
+
+## Repository Memory Map
+
+```txt
 .ai/
-context/ # Business logic, domain rules, product behavior
-decisions/ # Architecture & technical decisions
-docs/ # Internal packages, integrations, tools
-examples/ # Preferred implementation patterns
-maintenance/ # Memory update & sync guides
-prompts/ # Reusable agent prompts
-standards/ # Coding, naming, structure, testing standards
-testing/ # Test setup, patterns, examples
-workflow/ # Task-specific workflows
+  workflow/     task workflows; read first when using .ai
+  context/      business logic, domain rules, product behavior
+  standards/    coding, naming, structure, testing conventions
+  examples/     preferred implementation patterns
+  docs/         packages, integrations, tools
+  decisions/    architecture and long-term design decisions
+  testing/      test setup, patterns, examples
+  maintenance/  memory update/sync rules
+  prompts/      reusable prompts
 
-.github/
-copilot-instructions.md
-
-AGENT.md
+.github/copilot-instructions.md
+AGENTS.md
 ```
 
-## Workflow Routing
+## Agent Rules
 
-Start with the closest workflow:
+Must:
 
-```markdown
-.ai/workflow/new-feature.workflow.md
-.ai/workflow/debug.workflow.md
-.ai/workflow/local-refactor.workflow.md
-.ai/workflow/external-refactor.workflow.md
-```
-
-The workflow file specifies which context, standards, examples, docs, decisions, and testing files to read.
-
-## Memory Folder Responsibilities
-
-| Folder         | Use When                                                        |
-| -------------- | --------------------------------------------------------------- |
-| `context/`     | Task involves business logic, domain rules, or product behavior |
-| `decisions/`   | Task affects architecture, boundaries, or long-term design      |
-| `docs/`        | Working with internal packages, integrations, or tools          |
-| `examples/`    | Creating new code that should match existing style              |
-| `maintenance/` | Updating or syncing `.ai/` memory files                         |
-| `prompts/`     | Need a reusable structured prompt                               |
-| `standards/`   | Must follow repository conventions                              |
-| `testing/`     | Creating or changing tests                                      |
-| `workflow/`    | Following a defined task process                                |
-
-## Agent Behavior
-
-**Must:**
-
-- Be conservative and prefer smallest correct changes
-- Follow existing patterns and preserve layer boundaries
+- Prefer the smallest correct change
+- Preserve existing architecture and layer boundaries
 - Inspect more context when uncertain
-- Clearly state assumptions
-- Update `.ai/` memory when needed
+- State assumptions clearly
+- Follow selected workflows, standards, examples, docs, and decisions
+- Keep `.ai/` memory accurate when updating it
 
-**Must Not:**
+Must not:
 
 - Rewrite unrelated files
-- Invent undocumented business rules
-- Create new architecture unless required
-- Ignore workflows, standards, examples, docs, or decisions
-- Commit secrets, credentials, or sensitive values
+- Invent business rules
+- Add architecture without need
+- Let `.ai/` override actual code
+- Ignore relevant `.ai/` files after choosing to use them
+- Commit secrets, credentials, tokens, or sensitive values
 
-## Updating `.ai` Memory
+## Updating `.ai/`
 
-Update the relevant file when a change affects future agent behavior:
+Update memory only when future agents need to know the change:
 
-- Business/domain → `context/`
-- Architecture/decision → `decisions/`
-- Package/integration/tool docs → `docs/`
-- New pattern → `examples/`
-- Memory sync process → `maintenance/`
-- Standard/convention → `standards/`
-- Testing → `testing/`
-- Workflow → `workflow/`
+```txt
+Business/domain behavior -> context/
+Architecture decision     -> decisions/
+Package/integration docs  -> docs/
+Reusable code pattern     -> examples/
+Memory process            -> maintenance/
+Convention/standard       -> standards/
+Testing behavior          -> testing/
+Workflow process          -> workflow/
+```
 
-`.ai/` must always reflect the **current** repository state.
+Memory updates must reflect the current repository state. Update only the smallest relevant section; do not rewrite unrelated memory files.
 
 ## Final Response Format
 
-After completing a task, respond with:
+For implementation tasks, respond with:
 
-```md
+```txt
 **Summary:**
 
 - What was done
@@ -116,4 +125,6 @@ After completing a task, respond with:
 - Risks, assumptions, follow-up items
 ```
 
-**Last Updated**: 2026-05-26
+For small review-only or explanation-only tasks, a shorter response is acceptable.
+
+**Last Updated:** 2026-05-30
