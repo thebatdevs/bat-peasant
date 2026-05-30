@@ -11,7 +11,7 @@ Purpose: define how agents must write, name, structure, validate, and layer code
 - Validate external input and important business input.
 - Throw meaningful errors.
 - Keep business logic in the Service layer only.
-- Log errors with context using `logErrorMessage(error, '<functionName>')` when available.
+- Log errors with context using the shared `logErrorMessage(error, '<functionName>')` when available, If not implement it and export it from `src/libs`; do not duplicate local logging helpers.
 - Return validated domain objects with Zod `.parse()` when appropriate.
 - Document intentional deviations in the relevant `.business-logic.md` file.
 
