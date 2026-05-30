@@ -4,7 +4,7 @@
 
 The goal of this project is to help AI coding agents understand a repository before they modify it. Instead of acting like a generic AI coding tool, `bat-peasant` gives the agent structured access to project context, engineering standards, workflow rules, implementation examples, technical decisions, and maintenance guides.
 
-`bat-peasant` is designed to be language-agnostic. It can be used for TypeScript, Python, or any other codebase as long as the repository-specific rules are documented inside the `.ai/` folder.
+`bat-peasant` is designed to be language-agnostic. It can be used for TypeScript, Python, or any other codebase as long as the repository-specific rules are documented inside the `code/.ai/` folder.
 
 ## Purpose
 
@@ -28,49 +28,54 @@ It should help with tasks such as:
 
 Instead, it separates agent memory into focused files and folders.
 
-The root `AGENT.md` acts as the entrypoint. It tells the agent how to use the `.ai/` folder.
+The `code/AGENTS.md` file acts as the entrypoint. It tells the agent how to use the `code/.ai/` folder.
 
-The `.ai/workflow/` files define task-specific execution flows. Each workflow file is responsible for listing which context, standards, examples, docs, prompts, and decisions should be read for that task.
+The `code/.ai/workflow/` files define task-specific execution flows. Each workflow file is responsible for listing which context, standards, examples, docs, prompts, and decisions should be read for that task.
 
 ## Folder Structure
 
 ```txt
-.ai/
-├── context/ # Project-specific business, domain, and product context
-├── decisions/ # Architecture and technical decisions
-├── docs/ # Internal package, tool, framework, and integration documentation
-├── examples/ # Reference examples of preferred implementation patterns
-├── maintenance/ # Guides for keeping memory files accurate and up to date
-├── prompts/ # Reusable task prompts
-├── standards/ # Coding, naming, project structure, testing, and review standards
-├── testing/ # Test framework setup, test patterns, and test examples
-└── workflow/ # Step-by-step workflows for common engineering tasks
+code/
+├── .ai/
+│   ├── context/ # Project-specific business, domain, and product context
+│   ├── decisions/ # Architecture and technical decisions
+│   ├── docs/ # Internal package, tool, framework, and integration documentation
+│   ├── examples/ # Reference examples of preferred implementation patterns
+│   ├── maintenance/ # Guides for keeping memory files accurate and up to date
+│   ├── metadata/ # Memory-system metadata
+│   ├── prompts/ # Reusable task prompts
+│   ├── standards/ # Coding, naming, project structure, testing, and review standards
+│   ├── testing/ # Test framework setup, test patterns, and test examples
+│   └── workflow/ # Step-by-step workflows for common engineering tasks
+├── .github/
+│   └── copilot-instructions.md
+└── AGENTS.md
 
-.github/
-└── copilot-instructions.md
-
-AGENT.md
+docs/
+markdown/
+prompt/
+README.md
 ```
 
 ## How It Works
 
-The agent starts from `AGENT.md`.
+The agent starts from `code/AGENTS.md`.
 
-Then it identifies the task type and reads the matching workflow file from `.ai/workflow/`.
+Then it identifies the task type and reads the matching workflow file from `code/.ai/workflow/`.
 
 For example:
 
 ```txt
-New feature -> .ai/workflow/new-feature.workflow.md
-Bug fix -> .ai/workflow/debug.workflow.md
-Small refactor -> .ai/workflow/local-refactor.workflow.md
-Large refactor -> .ai/workflow/external-refactor.workflow.md
-Testing feature -> .ai/workflow/testing.workflow.md
+New feature -> code/.ai/workflow/new-feature.workflow.md
+Bug fix -> code/.ai/workflow/debug.workflow.md
+Small refactor -> code/.ai/workflow/local-refactor.worflow.md
+Large refactor -> code/.ai/workflow/external-refactor.workflow.md
+Testing feature -> code/.ai/workflow/testing.workflow.md
 ```
 
 The workflow file then tells the agent which supporting memory files to read before making changes.
 
-This keeps `AGENT.md` small and reusable while allowing each repository to define its own detailed behavior.
+This keeps `code/AGENTS.md` small and reusable while allowing each repository to define its own detailed behavior.
 
 ## Memory File Responsibilities
 
@@ -122,7 +127,7 @@ Use this for:
 - Good test examples
 - Bad patterns to avoid
 
-### `maintenance/`
+### `maintanence/`
 
 Stores guides for keeping the memory system accurate.
 
@@ -131,7 +136,7 @@ Use this for:
 - Checking whether code follows standards
 - Syncing business logic documentation
 - Updating memory files after code changes
-- Preventing `.ai/` from becoming outdated
+- Preventing `code/.ai/` from becoming outdated
 
 ### `prompts/`
 
@@ -187,7 +192,7 @@ Use this for:
 
 `bat-peasant` follows these principles:
 
-- Keep `AGENT.md` small and language-agnostic.
+- Keep `code/AGENTS.md` small and language-agnostic.
 - Put task-specific instructions inside workflow files.
 - Put language-specific rules inside standards or docs.
 - Put implementation style inside examples.
@@ -213,7 +218,7 @@ Use this for:
 
 A coding agent using `bat-peasant` should:
 
-- Start from `AGENT.md`
+- Start from `code/AGENTS.md`
 - Read the relevant workflow file
 - Follow the workflow instructions
 - Inspect existing code before editing
@@ -221,26 +226,26 @@ A coding agent using `bat-peasant` should:
 - Follow documented standards
 - Respect existing architecture decisions
 - Make the smallest safe change
-- Update `.ai/` memory when future agent behavior would be affected
+- Update `code/.ai/` memory when future agent behavior would be affected
 - Clearly summarize changes, validation, risks, and assumptions
 
 ## Memory Update Rule
 
-When code changes affect future agent behavior, the related `.ai` memory file should be updated.
+When code changes affect future agent behavior, the related `code/.ai` memory file should be updated.
 
 Examples:
 
 ```txt
-Business/domain behavior changed -> .ai/context/
-Architecture decision changed -> .ai/decisions/
-Reusable package behavior changed -> .ai/docs/
-Preferred implementation pattern added -> .ai/examples/
-Repository standard changed -> .ai/standards/
-Testing pattern changed -> .ai/testing/
-Workflow changed -> .ai/workflow/
+Business/domain behavior changed -> code/.ai/context/
+Architecture decision changed -> code/.ai/decisions/
+Reusable package behavior changed -> code/.ai/docs/
+Preferred implementation pattern added -> code/.ai/examples/
+Repository standard changed -> code/.ai/standards/
+Testing pattern changed -> code/.ai/testing/
+Workflow changed -> code/.ai/workflow/
 ```
 
-The `.ai` folder should describe the current repository, not an idealized or outdated version of it.
+The `code/.ai` folder should describe the current repository, not an idealized or outdated version of it.
 
 ## Goal
 
