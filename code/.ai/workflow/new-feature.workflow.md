@@ -24,7 +24,7 @@ Read only examples relevant to the current feature.
 
 Common examples:
 
-```
+```text
 .ai/examples/dynamo-client.functions.md
 .ai/examples/dynamo-repository.functions.md
 .ai/examples/dynamo-service.functions.md
@@ -39,7 +39,7 @@ Use examples to match existing preferred patterns, but do not copy blindly.
 
 Before asking for approval, write the implementation plan to:
 
-```
+```text
 .ai/history/<task-name>/implementation-plan.md
 ```
 
@@ -53,7 +53,7 @@ Rules:
 
 Example:
 
-```sh
+```text
 .ai/history/add-withdraw-request-filter/implementation-plan.md
 .ai/history/create-payment-callback-handler/implementation-plan.md
 .ai/history/fix-user-kyc-validation/implementation-plan.md
