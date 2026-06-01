@@ -1,16 +1,16 @@
-# Rate the Standard
+# Rate the markdown
 
-I want you to review and rate this documentation standard out of 10.
+I want you to review and rate this documentation markdown out of 10.
 
 Context:
-This standard is part of `bat-peasant`, a personalized coding-agent memory system packaged as a reusable repository context template. Its goal is to help AI coding agents understand business logic in TypeScript/AWS serverless monorepos without loading the full repository.
+This markdown for a personalized coding-agent memory system packaged as a reusable repository context template. Its goal is to help AI coding agents understand business logic in any codebase.
 
-Please evaluate it as an AI-agent instruction standard, not as normal human documentation.
+Please evaluate it as an AI-agent instruction markdown, not as normal human documentation.
 
 Rate it out of 10 based on:
 
 1. Token efficiency
-2. Clarity
+2. Clarity`
 3. Practicality for coding agents
 4. Maintainability
 5. Completeness
@@ -30,6 +30,6 @@ Please return:
 Important formatting rule:
 The document uses `-c-` instead of triple backticks for internal code blocks. This is intentional. Do not criticize that unless it causes actual clarity problems.
 
-Here is the standard:
+Here is the markdown:
 
 [PASTE THE FULL DOCUMENT HERE]

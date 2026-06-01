@@ -208,7 +208,7 @@ Use this for:
 `bat-peasant` is not a full autonomous coding agent by itself.
 
 - It is not tied to one programming language.
-- It is not only for TypeScript.
+- It is language-agnostic, but it is not language-neutral.
 - It is not only for Serverless projects.
 - It is not a replacement for code review.
 - It is not a place to dump random notes.
