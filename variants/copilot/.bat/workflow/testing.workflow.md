@@ -9,22 +9,22 @@ Use this when adding, fixing, or reviewing tests.
 - Keep tests small, deterministic, and focused
 - Mock external boundaries only
 - Do not add unrelated coverage
-- Match `.ai/context/*.business-logic.md`
+- Match `.bat-peasant/context/*.business-logic.md`
 
 ## Required Reading
 
-1. Relevant `.ai/context/*.business-logic.md`
-2. `.ai/standards/code-writing.standard.md`
-3. `.ai/standards/project-structure.standard.md`
+1. Relevant `.bat-peasant/context/*.business-logic.md`
+2. `.bat-peasant/standards/code-writing.standard.md`
+3. `.bat-peasant/standards/project-structure.standard.md`
 4. Existing tests for the target module
 5. Related source files
 
 Check examples only when relevant:
 
 ```sh
-.ai/examples/dynamo-_.functions.md
-.ai/examples/service-layer-functions.md
-.ai/examples/api-handler_.example.md
+.bat-peasant/examples/dynamo-_.functions.md
+.bat-peasant/examples/service-layer-functions.md
+.bat-peasant/examples/api-handler_.example.md
 ```
 
 ## History Rule
@@ -32,7 +32,7 @@ Check examples only when relevant:
 For non-trivial tasks, save plan to:
 
 ```sh
-.ai/history/<kebab-task-name>/testing-plan.md
+.bat-peasant/history/<kebab-task-name>/testing-plan.md
 ```
 
 Skip for small one-test fixes.

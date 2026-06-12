@@ -1,10 +1,10 @@
 # Standard Compliance Scan
 
-Scan the current project and report where the codebase does not follow the repository standards in `/.ai/standard`.
+Scan the current project and report where the codebase does not follow the repository standards in `/.bat-peasant/standard`.
 
 ## Goal
 
-Detect violations of existing `/.ai/standard` standards and create a precise compliance report.
+Detect violations of existing `/.bat-peasant/standard` standards and create a precise compliance report.
 
 ## Required Input
 
@@ -12,10 +12,10 @@ Read first:
 
 ```txt
 AGENTS.md
-/.ai/standard/**
-/.ai/context/**
-/.ai/workflow/**
-/.ai/examples/**
+/.bat-peasant/standard/**
+/.bat-peasant/context/**
+/.bat-peasant/workflow/**
+/.bat-peasant/examples/**
 ```
 
 Then inspect the relevant source code.
@@ -24,14 +24,14 @@ Do not guess standards. Only report violations against documented standards.
 
 ## Task
 
-1. Read all standards in `/.ai/standard`.
+1. Read all standards in `/.bat-peasant/standard`.
 2. Extract the concrete rules from each standard.
 3. Scan the repository for code that violates those rules.
 4. Ignore generated files, build outputs, dependencies, and irrelevant artifacts.
 5. Create a report at:
 
 ```txt
-/.ai/output/scan-result-YYYY-MM-DD.md
+/.bat-peasant/output/scan-result-YYYY-MM-DD.md
 ```
 
 Use the current date for `YYYY-MM-DD`.
@@ -94,7 +94,7 @@ Date: YYYY-MM-DD
 
 ### 1. [severity] Issue title
 
-- Standard: `/.ai/standard/<file>.md`
+- Standard: `/.bat-peasant/standard/<file>.md`
 - File: `path/to/file.ts`
 - Problem: ...
 - Required fix: ...

@@ -4,7 +4,7 @@
 
 The goal of this project is to help AI coding agents understand a repository before they modify it. Instead of acting like a generic AI coding tool, `bat-peasant` gives the agent structured access to project context, engineering standards, workflow rules, implementation examples, technical decisions, and maintenance guides.
 
-`bat-peasant` is designed to be language-agnostic. It can be used for TypeScript, Python, or any other codebase as long as the repository-specific rules are documented inside the `code/.ai/` folder.
+`bat-peasant` is designed to be language-agnostic. It can be used for TypeScript, Python, or any other codebase as long as the repository-specific rules are documented inside the `code/.bat-peasant/` folder.
 
 ## Purpose
 
@@ -28,15 +28,15 @@ It should help with tasks such as:
 
 Instead, it separates agent memory into focused files and folders.
 
-The `code/AGENTS.md` file acts as the entrypoint. It tells the agent how to use the `code/.ai/` folder.
+The `code/AGENTS.md` file acts as the entrypoint. It tells the agent how to use the `code/.bat-peasant/` folder.
 
-The `code/.ai/workflow/` files define task-specific execution flows. Each workflow file is responsible for listing which context, standards, examples, docs, prompts, and decisions should be read for that task.
+The `code/.bat-peasant/workflow/` files define task-specific execution flows. Each workflow file is responsible for listing which context, standards, examples, docs, prompts, and decisions should be read for that task.
 
 ## Folder Structure
 
 ```txt
 code/
-├── .ai/
+├── .bat-peasant/
 │   ├── context/ # Project-specific business, domain, and product context
 │   ├── decisions/ # Architecture and technical decisions
 │   ├── docs/ # Internal package, tool, framework, and integration documentation
@@ -61,16 +61,16 @@ README.md
 
 The agent starts from `code/AGENTS.md`.
 
-Then it identifies the task type and reads the matching workflow file from `code/.ai/workflow/`.
+Then it identifies the task type and reads the matching workflow file from `code/.bat-peasant/workflow/`.
 
 For example:
 
 ```txt
-New feature -> code/.ai/workflow/new-feature.workflow.md
-Bug fix -> code/.ai/workflow/debug.workflow.md
-Small refactor -> code/.ai/workflow/local-refactor.worflow.md
-Large refactor -> code/.ai/workflow/external-refactor.workflow.md
-Testing feature -> code/.ai/workflow/testing.workflow.md
+New feature -> code/.bat-peasant/workflow/new-feature.workflow.md
+Bug fix -> code/.bat-peasant/workflow/debug.workflow.md
+Small refactor -> code/.bat-peasant/workflow/local-refactor.worflow.md
+Large refactor -> code/.bat-peasant/workflow/external-refactor.workflow.md
+Testing feature -> code/.bat-peasant/workflow/testing.workflow.md
 ```
 
 The workflow file then tells the agent which supporting memory files to read before making changes.
@@ -136,7 +136,7 @@ Use this for:
 - Checking whether code follows standards
 - Syncing business logic documentation
 - Updating memory files after code changes
-- Preventing `code/.ai/` from becoming outdated
+- Preventing `code/.bat-peasant/` from becoming outdated
 
 ### `prompts/`
 
@@ -226,26 +226,26 @@ A coding agent using `bat-peasant` should:
 - Follow documented standards
 - Respect existing architecture decisions
 - Make the smallest safe change
-- Update `code/.ai/` memory when future agent behavior would be affected
+- Update `code/.bat-peasant/` memory when future agent behavior would be affected
 - Clearly summarize changes, validation, risks, and assumptions
 
 ## Memory Update Rule
 
-When code changes affect future agent behavior, the related `code/.ai` memory file should be updated.
+When code changes affect future agent behavior, the related `code/.bat-peasant` memory file should be updated.
 
 Examples:
 
 ```txt
-Business/domain behavior changed -> code/.ai/context/
-Architecture decision changed -> code/.ai/decisions/
-Reusable package behavior changed -> code/.ai/docs/
-Preferred implementation pattern added -> code/.ai/examples/
-Repository standard changed -> code/.ai/standards/
-Testing pattern changed -> code/.ai/testing/
-Workflow changed -> code/.ai/workflow/
+Business/domain behavior changed -> code/.bat-peasant/context/
+Architecture decision changed -> code/.bat-peasant/decisions/
+Reusable package behavior changed -> code/.bat-peasant/docs/
+Preferred implementation pattern added -> code/.bat-peasant/examples/
+Repository standard changed -> code/.bat-peasant/standards/
+Testing pattern changed -> code/.bat-peasant/testing/
+Workflow changed -> code/.bat-peasant/workflow/
 ```
 
-The `code/.ai` folder should describe the current repository, not an idealized or outdated version of it.
+The `code/.bat-peasant` folder should describe the current repository, not an idealized or outdated version of it.
 
 ## Goal
 

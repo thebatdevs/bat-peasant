@@ -34,7 +34,8 @@ yarn-error.log*
 # private ai library
 .github/**.md
 .github/**/*.md
-/.ai
+.codex
+.bat
 AGENTS.md
 
 # turbo

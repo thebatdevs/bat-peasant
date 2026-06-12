@@ -7,21 +7,21 @@ Purpose: document only the business logic needed for AI agents to safely modify 
 Store business logic context files in:
 
 ```txt
-.ai/context/
+.bat-peasant/context/
 ```
 
 For small projects, use one file:
 
 ```txt
-.ai/context/context.business-logic.md
+.bat-peasant/context/context.business-logic.md
 ```
 
 For medium or large projects, use one file per service/entity:
 
 ```txt
-.ai/context/withdraw-request.business-logic.md
-.ai/context/custom-config.business-logic.md
-.ai/context/user-payment-address.business-logic.md
+.bat-peasant/context/withdraw-request.business-logic.md
+.bat-peasant/context/custom-config.business-logic.md
+.bat-peasant/context/user-payment-address.business-logic.md
 ```
 
 Do not create a separate `business-logic/` subfolder.
@@ -49,9 +49,9 @@ src/services/withdraw-request/
 src/services/custom-config/
 src/services/user-payment-address/
 
-.ai/context/withdraw-request.business-logic.md
-.ai/context/custom-config.business-logic.md
-.ai/context/user-payment-address.business-logic.md
+.bat-peasant/context/withdraw-request.business-logic.md
+.bat-peasant/context/custom-config.business-logic.md
+.bat-peasant/context/user-payment-address.business-logic.md
 ```
 
 ## Include Only

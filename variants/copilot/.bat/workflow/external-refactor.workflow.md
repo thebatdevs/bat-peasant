@@ -21,11 +21,11 @@ Do not infer missing legacy behavior. If required behavior is unclear, record it
 Before planning or coding, read:
 
 1. User-provided legacy summary
-2. Relevant `.ai/context/*.business-logic.md` files
-3. `.ai/standards/code-writing.standard.md`
-4. `.ai/standards/project-structure.standard.md`
+2. Relevant `.bat-peasant/context/*.business-logic.md` files
+3. `.bat-peasant/standards/code-writing.standard.md`
+4. `.bat-peasant/standards/project-structure.standard.md`
 5. Existing similar implementations in the current codebase
-6. Matching files in `.ai/examples/` if available
+6. Matching files in `.bat-peasant/examples/` if available
 
 ## Compatibility Check
 
@@ -49,7 +49,7 @@ Do not implement during compatibility checking.
 Create or update:
 
 ```txt
-.ai/history/<kebab-task-name>/external-refactor-plan.md
+.bat-peasant/history/<kebab-task-name>/external-refactor-plan.md
 ```
 
 The plan must include exactly these sections:
@@ -133,7 +133,7 @@ Does this refactored code need tests?
 
 If tests are required:
 
-1. Read `.ai/standards/testing.standard.md` if it exists.
+1. Read `.bat-peasant/standards/testing.standard.md` if it exists.
 2. Inspect existing test patterns.
 3. Add focused tests for migrated business behavior.
 4. Follow existing test naming and structure.

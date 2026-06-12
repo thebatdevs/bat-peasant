@@ -17,10 +17,10 @@ Preserve current behavior unless the user explicitly approves behavior changes. 
 
 1. Target files/functions
 2. Direct callers/dependencies
-3. Relevant `.ai/context/*.business-logic.md` if behavior may change
-4. `.ai/standards/code-writing.standard.md`
-5. `.ai/standards/project-structure.standard.md`
-6. Matching `.ai/examples/` if useful
+3. Relevant `.bat-peasant/context/*.business-logic.md` if behavior may change
+4. `.bat-peasant/standards/code-writing.standard.md`
+5. `.bat-peasant/standards/project-structure.standard.md`
+6. Matching `.bat-peasant/examples/` if useful
 7. Existing tests if available
 
 ## Safety Check
@@ -43,7 +43,7 @@ Do not code during this step.
 Create/update:
 
 ```sh
-.ai/history/<kebab-task-name>/local-refactor-plan.md
+.bat-peasant/history/<kebab-task-name>/local-refactor-plan.md
 ```
 
 Plan must contain exactly:
@@ -133,7 +133,7 @@ Does this local refactor need tests?
 
 If yes:
 
-1. Read `.ai/standards/testing.standard.md` if present.
+1. Read `.bat-peasant/standards/testing.standard.md` if present.
 2. Inspect existing tests.
 3. Add focused tests for preserved behavior.
 4. Follow existing test structure.

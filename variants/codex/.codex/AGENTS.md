@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Purpose: Baseline entrypoint for AI coding agents. This repo may include `.ai/` as project memory. Use `.ai/` when the prompt contains `#BAT`, when the user asks for memory/workflows/standards/docs, or when extra context materially improves correctness.
+Purpose: Baseline entrypoint for AI coding agents. This repo may include `.bat-peasant/` as project memory. Use `.bat-peasant/` when the prompt contains `#BAT`, when the user asks for memory/workflows/standards/docs, or when extra context materially improves correctness.
 
 ## Core Rule
 
@@ -8,30 +8,30 @@ Before changing code:
 
 1. Identify task type.
 2. Check nearby code first.
-3. If prompt includes `#BAT`, use `.ai/`.
-4. Otherwise, use `.ai/` only when the task is broad, risky, unfamiliar, changes behavior, or nearby code is insufficient.
-5. When using `.ai/`, start with the closest `.ai/workflow/*.workflow.md` and read files referenced by that workflow.
+3. If prompt includes `#BAT`, use `.bat-peasant/`.
+4. Otherwise, use `.bat-peasant/` only when the task is broad, risky, unfamiliar, changes behavior, or nearby code is insufficient.
+5. When using `.bat-peasant/`, start with the closest `.bat-peasant/workflow/*.workflow.md` and read files referenced by that workflow.
 6. Follow existing patterns and make the smallest correct change.
-7. Update `.ai/` memory only when the change affects future agent behavior.
+7. Update `.bat-peasant/` memory only when the change affects future agent behavior.
 
-Actual repository code is the source of truth. `.ai/` guides implementation but must be checked against current code.
+Actual repository code is the source of truth. `.bat-peasant/` guides implementation but must be checked against current code.
 
 ## Task Routing
 
 ```txt
-New feature       -> .ai/workflow/new-feature.workflow.md
-Bug/debug         -> .ai/workflow/debug.workflow.md
-Local refactor    -> .ai/workflow/local-refactor.workflow.md
-External refactor -> .ai/workflow/external-refactor.workflow.md
-Tests             -> relevant workflow + .ai/testing/
-Memory update     -> .ai/maintenance/
+New feature       -> .bat-peasant/workflow/new-feature.workflow.md
+Bug/debug         -> .bat-peasant/workflow/debug.workflow.md
+Local refactor    -> .bat-peasant/workflow/local-refactor.workflow.md
+External refactor -> .bat-peasant/workflow/external-refactor.workflow.md
+Tests             -> relevant workflow + .bat-peasant/testing/
+Memory update     -> .bat-peasant/maintenance/
 ```
 
-If no workflow matches, inspect only the relevant `.ai/` files.
+If no workflow matches, inspect only the relevant `.bat-peasant/` files.
 
-## When to Use `.ai/`
+## When to Use `.bat-peasant/`
 
-Use `.ai/` for:
+Use `.bat-peasant/` for:
 
 - `#BAT` prompts
 - Explicit requests for project memory, workflows, standards, examples, docs, or decisions
@@ -39,20 +39,20 @@ Use `.ai/` for:
 - Unclear implementation patterns
 - Changes that should be remembered by future agents
 
-Skip `.ai/` for:
+Skip `.bat-peasant/` for:
 
 - Narrow local edits
 - Mechanical/self-contained changes
 - Documentation-only changes where memory would not affect the result
 - Tasks fully explained by the user and nearby code
 
-For `#BAT`, mention in the final response that `.ai/` instructions were used.
+For `#BAT`, mention in the final response that `.bat-peasant/` instructions were used.
 
 ## Repository Memory Map
 
 ```txt
-.ai/
-  workflow/     task workflows; read first when using .ai
+.bat-peasant/
+  workflow/     task workflows; read first when using .bat-peasant
   context/      business logic, domain rules, product behavior
   standards/    coding, naming, structure, testing conventions
   examples/     preferred implementation patterns
@@ -75,18 +75,18 @@ Must:
 - Inspect more context when uncertain
 - State assumptions clearly
 - Follow selected workflows, standards, examples, docs, and decisions
-- Keep `.ai/` memory accurate when updating it
+- Keep `.bat-peasant/` memory accurate when updating it
 
 Must not:
 
 - Rewrite unrelated files
 - Invent business rules
 - Add architecture without need
-- Let `.ai/` override actual code
-- Ignore relevant `.ai/` files after choosing to use them
+- Let `.bat-peasant/` override actual code
+- Ignore relevant `.bat-peasant/` files after choosing to use them
 - Commit secrets, credentials, tokens, or sensitive values
 
-## Updating `.ai/`
+## Updating `.bat-peasant/`
 
 Update memory only when future agents need to know the change:
 

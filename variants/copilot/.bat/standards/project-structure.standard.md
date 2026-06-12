@@ -26,7 +26,7 @@ Follow the existing project convention first. Do not restructure a project just 
 ## Layout Guide
 
 ```txt
-.ai/context/\*.business-logic.md
+.bat-peasant/context/\*.business-logic.md
 src/
 <entry-layer>/
 <service-layer>/

@@ -1,6 +1,6 @@
 # Sync Business Logic Context
 
-You are syncing business logic documentation for this repository’s `.ai/context/*.business-logic.md` files.
+You are syncing business logic documentation for this repository’s `.bat-peasant/context/*.business-logic.md` files.
 
 ## Goal
 
@@ -8,8 +8,8 @@ Scan the project and create or update minimal business logic context files for A
 
 Use the existing business logic context standard in this repo:
 
-- Monorepo: use `.ai/standards/context-documentation-monorepo.standard.md`.
-- Mono-project: use `.ai/standards/context-documentation-single.standard.md`.
+- Monorepo: use `.bat-peasant/standards/context-documentation-monorepo.standard.md`.
+- Mono-project: use `.bat-peasant/standards/context-documentation-single.standard.md`.
 
 If both exist, choose based on repository shape:
 
@@ -21,13 +21,13 @@ If both exist, choose based on repository shape:
 Business logic context files must be created directly under:
 
 ```sh
-.ai/context/
+.bat-peasant/context/
 ```
 
 Do not create:
 
 ```sh
-.ai/context/business-logic/
+.bat-peasant/context/business-logic/
 ```
 
 ## Rules
@@ -79,35 +79,35 @@ Do not include:
 For monorepo, create/update one file per scope:
 
 ```sh
-.ai/context/<scope>.business-logic.md
+.bat-peasant/context/<scope>.business-logic.md
 ```
 
 Examples:
 
 ```sh
-.ai/context/client-withdraw.business-logic.md
-.ai/context/admin-pay-to-pay.business-logic.md
-.ai/context/bank-deposit-service.business-logic.md
+.bat-peasant/context/client-withdraw.business-logic.md
+.bat-peasant/context/admin-pay-to-pay.business-logic.md
+.bat-peasant/context/bank-deposit-service.business-logic.md
 ```
 
 For mono-project, create/update one compact project-level file by default:
 
 ```sh
-.ai/context/project.business-logic.md
+.bat-peasant/context/project.business-logic.md
 ```
 
 If the mono-project has clearly separated business services, create one file per service instead:
 
 ```sh
-.ai/context/<service-name>.business-logic.md
+.bat-peasant/context/<service-name>.business-logic.md
 ```
 
 Examples:
 
 ```sh
-.ai/context/withdraw-request.business-logic.md
-.ai/context/payment.business-logic.md
-.ai/context/user-payment-address.business-logic.md
+.bat-peasant/context/withdraw-request.business-logic.md
+.bat-peasant/context/payment.business-logic.md
+.bat-peasant/context/user-payment-address.business-logic.md
 ```
 
 ## Documentation Requirements

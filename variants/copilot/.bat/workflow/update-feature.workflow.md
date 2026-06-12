@@ -8,25 +8,25 @@ Use this when changing, extending, or refactoring an existing feature.
 - Minimize changes — be surgical
 - Always understand current behavior before changing it
 - Plan first, then execute
-- Business logic lives in `.ai/context/*.business-logic.md`
+- Business logic lives in `.bat-peasant/context/*.business-logic.md`
 
 ## Required Reading (Prioritize)
 
-1. Relevant `.ai/context/` business logic files
-2. `.ai/standards/code-writing.standard.md`
-3. `.ai/standards/project-structure.standard.md`
+1. Relevant `.bat-peasant/context/` business logic files
+2. `.bat-peasant/standards/code-writing.standard.md`
+3. `.bat-peasant/standards/project-structure.standard.md`
 4. Current implementation files (handler, service, repository, schema, tests)
 
 If business behavior changes, also read the appropriate monorepo or single-project context standard.
 
 ## Example Patterns
 
-Check `.ai/examples/` for similar patterns:
+Check `.bat-peasant/examples/` for similar patterns:
 
 ```txt
-.ai/examples/dynamo-*.functions.md
-.ai/examples/service-layer-functions.md
-.ai/examples/project-structure*.example.md
+.bat-peasant/examples/dynamo-*.functions.md
+.bat-peasant/examples/service-layer-functions.md
+.bat-peasant/examples/project-structure*.example.md
 ```
 
 Use them to maintain style consistency.
@@ -36,7 +36,7 @@ Use them to maintain style consistency.
 Before seeking approval, save the update plan to:
 
 ```txt
-.ai/history/<kebab-task-name>/update-plan.md
+.bat-peasant/history/<kebab-task-name>/update-plan.md
 ```
 
 Keep plans concise. Update the same file if requirements change. Skip for trivial one-line fixes unless requested.
@@ -55,7 +55,7 @@ Keep plans concise. Update the same file if requirements change. Skip for trivia
 7. Make minimal, targeted changes. Avoid unrelated refactors.
 8. Update/add tests per testing plan.
 9. Run tests, type check, lint.
-10. Update `.ai/context/` business docs **only** if behavior changed.
+10. Update `.bat-peasant/context/` business docs **only** if behavior changed.
 11. Return concise summary.
 
 ## Update Plan Template Requirements

@@ -7,15 +7,15 @@ Purpose: document only the business logic needed for AI agents to safely modify 
 Create one file per monorepo scope:
 
 ```txt
-.ai/context/<scope>.business-logic.md
+.bat-peasant/context/<scope>.business-logic.md
 ```
 
 Examples:
 
 ```txt
-.ai/context/client-withdraw.business-logic.md
-.ai/context/admin-pay-to-pay.business-logic.md
-.ai/context/bank-deposit-service.business-logic.md
+.bat-peasant/context/client-withdraw.business-logic.md
+.bat-peasant/context/admin-pay-to-pay.business-logic.md
+.bat-peasant/context/bank-deposit-service.business-logic.md
 ```
 
 A scope can be a stack, package, service app, deployable project, or bounded business module.
