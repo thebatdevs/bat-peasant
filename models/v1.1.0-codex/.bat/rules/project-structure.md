@@ -17,7 +17,7 @@ Follow the existing project convention first. Do not restructure a project just 
 | Layer           | Responsibility                                      | Common folders                        |
 | --------------- | --------------------------------------------------- | ------------------------------------- |
 | Entry           | HTTP handlers, events, CLI, workers                 | `functions`, `handlers`, `api`, `cmd` |
-| Service/Domain  | business rules, workflows, validation               | `services`, `domain`, `usecases`      |
+| Service/Domain  | business rules, workflows, validation               | `services`, `domain`, `use-cases`     |
 | Repository/Data | database queries, persistence, external data access | `repository`, `repositories`, `data`  |
 | Models/Types    | entities, DTOs, schemas, types                      | `models`, `types`, `schemas`          |
 | Config          | env, constants, feature flags                       | `config`                              |
