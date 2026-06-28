@@ -42,9 +42,9 @@ Schema naming and type inference rules are defined in the Code Writing Standard.
 
 Required flow:
 
--c-txt
+```txt
 Handler -> Service -> Repository -> DynamoDB / External API
--c-
+```
 
 ## DynamoDB Rules
 
@@ -75,9 +75,9 @@ Use Vitest.
 
 Example:
 
--c-ts
+```ts
 it('throws when withdraw request does not exist', async () => {});
--c-
+```
 
 ## Dependency Rules
 

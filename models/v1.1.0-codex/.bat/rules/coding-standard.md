@@ -275,4 +275,5 @@ Before writing or changing code, confirm:
 - files are focused and under 300 lines when possible
 - errors are meaningful and logged with function context
 - returned domain objects are validated with Zod when appropriate
-- intentional deviations are documented in the relevant `.business-logic.md` file
+
+**Last Updated:** 2026-05-26
