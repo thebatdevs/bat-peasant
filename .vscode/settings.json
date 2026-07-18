@@ -171,9 +171,10 @@
   // GitHub Copilot Settings
   "github.copilot.enable": {
     "*": true,
-    "yaml": true,
     "plaintext": false,
-    "markdown": true
+    "markdown": false,
+    "scminput": false,
+    "yaml": true
   },
   "cSpell.words": [
     "ARIG",
