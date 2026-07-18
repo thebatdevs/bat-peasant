@@ -1,4 +1,4 @@
-# Bat-peasant workflow
+# Bat-peasant `v1.1.0-codex` workflow
 
 I have $20 ChatGPT plus subscription. That makes me able to use Codex as my coding agent tool.
 
@@ -38,6 +38,8 @@ So i decided to create `/.agent` folder with following information
 └── /skills/*     # Skills, tools, capabilities, and plugin modules
 AGENTS.md         # Main index & documentation
 ```
+
+The `.agent` folder contains a group of markdowns that tells codex about my preference for this development
 
 ## Example use case of this project
 
