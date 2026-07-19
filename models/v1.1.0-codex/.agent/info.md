@@ -15,7 +15,7 @@ Read only files relevant to the current task. Do not load the entire directory b
 ├── context/    # Business rules, domain behavior, and workflows
 ├── docs/       # Internal libraries, APIs, infrastructure, and references
 ├── examples/   # Canonical implementation and usage patterns
-├── metadata/   # Architecture, project structure, technology, and version
+├── metadata/   # Project structure, technology, and version
 ├── plans/      # Generated implementation plans
 ├── prompts/    # Task-specific workflow templates
 ├── rules/      # Coding, layering, framework, and testing standards
