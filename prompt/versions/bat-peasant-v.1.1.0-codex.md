@@ -29,25 +29,23 @@ I will maintain a single `.agent/` directory at the root of every major reposito
 ├── metadata/                         # Project information and configuration
 │   ├── architecture.md
 │   ├── project-structure.md
-│   ├── tech-stack.md
-│   └── version.json
+│   └── tech-stack.md
 ├── prompts/                          # AI prompt templates for development tasks
 │   ├── feature/
-│   │   ├── implement-new.md
-│   │   └── update-existing.md
+│   │   ├── implement-new-feature.md
+│   │   └── update-existing-feature.md
 │   ├── maintenance/
-│   │   ├── debug.md
 │   │   ├── context-documentation.md
+│   │   ├── debug.md
+│   │   ├── migration.md
 │   │   ├── refactor.md
-│   │   └── migration.md
-│   ├── review-pull-request.md
+│   │   └── refactor-pull-request.md
 │   └── templates/
 ├── rules/                            # Coding standards and project rules (language-agnostic where possible)
 │   ├── service-layer-standard.md
 │   ├── repository-layer-standard.md
 │   ├── typescript-coding-standards.md
 │   ├── typescript-testing.md
-│   ├── typescript.md
 │   └── typescript-serverless.md
 ├── plans/                            # Generated plans (git-ignored or committed selectively)
 │   └── *.plan.md
@@ -85,8 +83,8 @@ AGENTS.md                         # Main agent documentation & index
 
 ## Most frequent use cases (with recommended prompt starter)
 
-- New Feature: `.agent/prompt/implement-new.md` template
-- Update Existing Feature: `.agent/prompt/maintenance/update-existing.md` template
+- New Feature: `.agent/prompt/implement-new-feature.md` template
+- Update Existing Feature: `.agent/prompt/maintenance/update-existing-feature.md` template
 - Debug/Fix Existing Feature: `.agent/prompt/maintenance/debug.md` template
 - Refactor: `.agent/prompt/maintenance/refactor.md` template
 - Port from another repo: Provide source files + ask to follow current `.agent` standards
