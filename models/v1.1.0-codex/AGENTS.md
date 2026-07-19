@@ -1,10 +1,26 @@
 # AGENTS.md
 
-## Core Behavior
+## Bat-Peasant
 
-- Follow existing repository patterns before creating new ones.
-- Keep changes small, focused, and directly related to the user request.
-- Do not rewrite unrelated code.
-- Do not introduce new dependencies unless required.
-- Do not change public APIs, database schemas, environment variables, or deployment configuration unless the task explicitly requires it.
-- Prefer strict types and existing abstractions.
+This repository uses Bat-Peasant `v1.1.0-codex`.
+
+Activate Bat-Peasant only when the task contains:
+
+```text
+##bat-peasant
+```
+
+Otherwise, use normal agent behavior.
+
+When activated:
+
+1. Read `.agents/info.md`.
+2. Load only the context, rules, examples, metadata, and documentation relevant to the task.
+3. Execute small, isolated tasks directly.
+4. Create `.agents/plans/<task-name>.plan.md` before complex or multi-file work.
+5. Do not implement a plan until approved unless immediate execution was explicitly requested.
+6. Follow repository-specific instructions over generic conventions.
+7. Prefer documented business rules and canonical examples over assumptions.
+8. Keep changes focused and report actual validation performed.
+
+> Context-first, plan-when-complex, execute-precisely.

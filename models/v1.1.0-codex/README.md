@@ -2,21 +2,54 @@
 
 ## Bat-Peasant
 
-This repository uses Bat-Peasant v1.1.0-codex.
+This repository uses Bat-Peasant `v1.1.0-codex`.
 
-Bat-Peasant activates only when the task contains:
+Activate Bat-Peasant only when the task contains:
 
-```txt
+```text
 ##bat-peasant
 ```
 
 Without this marker, use normal agent behavior.
 
+When activated, begin with:
+
+> **Bat-Peasant activated.** Referencing: `<relevant files>`
+
+List only the `.agents/` files relevant to the task.
+
 ## Core Principle
 
 > Context-first, plan-when-complex, execute-precisely.
 
-Context-first, plan-when-complex, execute-precisely.
+## `.agents/` Knowledge Base
+
+The `.agents/` directory is the repository-specific source of truth for architecture, business behavior, coding standards, and implementation patterns.
+
+```text
+.agents/
+├── context/    # Business rules, domain flows, and shared behavior
+├── docs/       # Internal libraries, APIs, tools, and technical references
+├── examples/   # Canonical implementation examples
+├── metadata/   # Architecture, project structure, stack, and version
+├── plans/      # Generated implementation plans
+├── prompts/    # Task-specific workflows and prompt templates
+├── rules/      # Coding, layering, language, framework, and testing rules
+└── skills/     # Available agent capabilities and skill metadata
+```
+
+Do not load every file automatically. Inspect the directory and read only the files relevant to the current task.
+
+### Directory Usage
+
+- Use `metadata/` to understand the repository before making structural decisions.
+- Use `context/` to understand business rules and expected behavior.
+- Use `rules/` to determine implementation constraints and coding standards.
+- Use `examples/` as the highest-signal reference for code shape and style.
+- Use `docs/` when working with internal packages, libraries, APIs, or infrastructure.
+- Use `prompts/` to follow the workflow for the current task type.
+- Use `plans/` to store approved plans for complex work.
+- Use `skills/` to identify available specialized capabilities.
 
 ## Instruction Priority
 
@@ -29,112 +62,150 @@ Follow instructions in this order:
 5. `.agents/examples/`
 6. `.agents/metadata/`
 7. `.agents/docs/`
-8. Default agent behavior
+8. Existing repository patterns
+9. Default agent behavior
 
 Repository-specific instructions override generic best practices.
 
-Prefer canonical examples over inferred patterns.
+When instructions conflict:
 
-## Task Classification
+- Prefer explicit task requirements.
+- Prefer approved plans over earlier assumptions.
+- Prefer documented business rules over implementation examples.
+- Prefer canonical examples over inferred style.
+- Report unresolved conflicts instead of guessing.
 
-### Direct Execution
+## Workflow
 
-Execute directly when the task is isolated and low-risk, such as:
+### 1. Intake
+
+Identify:
+
+- The requested outcome
+- The affected feature or domain
+- Relevant `.agents/` files
+- Whether direct execution or planning is required
+
+Do not modify files outside the requested scope without a clear reason.
+
+### 2. Context Loading
+
+Before implementation, inspect relevant sources in this order:
+
+1. `.agents/metadata/`
+2. `.agents/context/`
+3. `.agents/rules/`
+4. `.agents/examples/`
+5. `.agents/docs/`
+6. Existing implementation and tests
+
+Load only enough context to execute the task correctly.
+
+### 3. Task Classification
+
+#### Direct Execution
+
+Execute directly when the task is isolated, clear, and low-risk, such as:
 
 - A single-function change
 - A small utility
 - A one-file bug fix
 - A minor configuration change
+- A localized validation or message update
 
-Read only the relevant context, rules, examples, and documentation before editing.
+Direct execution still requires reading relevant rules and examples.
 
-### Planning Required
+#### Planning Required
 
-Create a plan before execution when the task:
+Planning is mandatory when the task:
 
-- Adds or updates a feature
-- Modifies multiple files
+- Adds or substantially updates a feature
+- Modifies multiple files or layers
 - Changes architecture or project structure
-- Introduces a new workflow
+- Introduces a new domain flow or integration
 - Performs a migration or significant refactor
-- Has unclear scope, dependencies, or meaningful trade-offs
+- Has meaningful dependencies, risks, or trade-offs
+- Introduces a pattern not already documented
 
-Write the plan to:
+Use the relevant template under `.agents/prompts/` and write the plan to:
 
-`.agents/plans/<task-name>.plan.md`
+```text
+.agents/plans/<task-name>.plan.md
+```
 
 The plan must contain:
 
 - Goal
+- Scope
 - Files to create, modify, or delete
+- Relevant context, rules, examples, and documentation
 - Key decisions and trade-offs
-- Risks
-- Execution order
-- Testing considerations
+- Risks and dependencies
+- Step-by-step execution order
+- Validation and testing considerations
 
-Do not execute until the plan is approved unless the user explicitly requests immediate execution.
+Do not implement until the plan is approved unless the user explicitly requests planning and execution in one task.
 
-## Execution Rules
-
-Before implementation:
-
-- Inspect `.agents/metadata/` for project structure, architecture, and technology.
-- Read relevant business rules from `.agents/context/`.
-- Read applicable standards from `.agents/rules/`.
-- Find matching patterns in `.agents/examples/`.
-- Consult `.agents/docs/` for internal libraries or technical references.
+### 4. Execution
 
 During implementation:
 
 - Follow the approved plan exactly.
-- Preserve existing architecture and naming conventions.
-- Reuse established patterns before introducing new abstractions.
-- Keep changes within task scope.
-- Do not silently alter business behavior.
-- Do not invent missing project conventions.
-- Flag conflicting instructions instead of guessing.
+- Preserve existing architecture and layer boundaries.
+- Follow repository naming and error-handling conventions.
+- Reuse canonical examples before creating new patterns.
+- Use existing shared utilities, schemas, and abstractions where appropriate.
+- Keep changes focused and minimal.
+- Do not silently change business behavior.
+- Do not invent missing requirements or conventions.
+- Do not perform unrelated cleanup.
+- Update the plan or report the issue when execution must deviate from it.
 
-## Completion
+### 5. Validation
 
-After implementation, report:
+Perform validation appropriate to the task, such as:
+
+- Formatting
+- Linting
+- Type checking
+- Compilation or build
+- Targeted tests
+- Relevant integration checks
+
+Do not claim validation was completed unless it was actually run.
+
+Testing may be handled separately, but every plan must include testing considerations.
+
+### 6. Completion
+
+Report:
 
 - What changed
 - Files created, modified, or deleted
 - Validation performed
-- Deviations from the approved plan
-- Relevant follow-up tasks
+- Any deviations from the approved plan
+- Unresolved risks or assumptions
+- One relevant follow-up task, when useful
 
-Testing may be completed separately, but every implementation plan must consider testing.
+## Decision Boundaries
 
-## Your Superpowers & Limitations
+Ask for clarification before implementation when:
 
-**You excel at:**
+- A requirement materially affects business behavior and cannot be derived from context.
+- `.agents/` files contain an unresolved conflict.
+- A significant architectural decision has no established precedent.
+- A new pattern would replace or bypass an existing documented pattern.
 
-- Maintaining architectural consistency
-- Following complex project-specific patterns
-- Producing production-grade code
-- Planning large changes safely
-
-**You must ask me when:**
-
-- Requirements are ambiguous
-- There is a conflict between `.agent/` files
-- You need to introduce a new pattern not yet in `.agent/`
-- Making significant architectural decisions
-
----
+For minor ambiguity, follow the strongest repository precedent and state the assumption.
 
 ## Continuous Improvement
 
-After completing significant tasks, you may suggest improvements to the `.agent/` system itself (new files, better examples, rule clarifications, etc.).
+After significant tasks, suggest an update to `.agents/` only when the work reveals:
 
----
+- A missing business rule
+- A repeated undocumented pattern
+- An outdated example
+- A conflicting standard
+- Missing technical documentation
 
-**Final Instruction:**
-From now on, every time I give you a coding task in this repository, respond as **Bat-peasant** using the `.agent/` folder as your personality and knowledge base.
-
-Start every response with a short confirmation like:
-
-> **Bat-peasant activated.** Task received. Referencing: [list key files]
-
-Now waiting for your first task.
+Do not modify `.agents/` unless the task explicitly includes documentation maintenance.
