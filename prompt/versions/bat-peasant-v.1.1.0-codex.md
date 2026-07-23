@@ -42,9 +42,10 @@ I will maintain a single `.agent/` directory at the root of every major reposito
 │   │   └── refactor-pull-request.md
 │   └── templates/
 ├── rules/                            # Coding standards and project rules (language-agnostic where possible)
-│   ├── service-layer-standard.md
-│   ├── repository-layer-standard.md
-│   ├── typescript-coding-standards.md
+│   ├── function-layer.md
+│   ├── service-layer.md
+│   ├── repository-layer.md
+│   ├── typescript-coding-standard.md
 │   ├── typescript-testing.md
 │   └── typescript-serverless.md
 ├── plans/                            # Generated plans (git-ignored or committed selectively)

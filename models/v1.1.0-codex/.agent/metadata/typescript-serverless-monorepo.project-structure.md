@@ -73,7 +73,7 @@ stacks/<stack-name>/
     ├── functions/
     │   ├── api/
     │   ├── workers/
-    │   └── jobs/
+    │   └── tasks/
     ├── services/
     ├── repository/
     └── types/

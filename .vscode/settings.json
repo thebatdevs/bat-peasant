@@ -52,25 +52,23 @@
   },
 
   // TypeScript Settings
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "typescript.suggest.autoImports": true,
-  "typescript.suggest.includeCompletionsForModuleExports": true,
-  "typescript.preferences.importModuleSpecifier": "relative",
-  "typescript.workspaceSymbols.scope": "allOpenProjects",
-  "typescript.inlayHints.parameterNames.enabled": "literals",
-  "typescript.inlayHints.parameterTypes.enabled": true,
-  "typescript.inlayHints.variableTypes.enabled": true,
-  "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
-  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
-
-  // JavaScript Settings
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "javascript.suggest.autoImports": true,
+  "js/ts.updateImportsOnFileMove.enabled": "always",
+  "js/ts.suggest.autoImports": true,
+  "js/ts.preferences.importModuleSpecifier": "non-relative",
+  "js/ts.workspaceSymbols.scope": "allOpenProjects",
+  "js/ts.inlayHints.parameterNames.enabled": "literals",
+  "js/ts.inlayHints.parameterTypes.enabled": false,
+  "js/ts.inlayHints.variableTypes.enabled": false,
+  "js/ts.inlayHints.propertyDeclarationTypes.enabled": false,
+  "js/ts.inlayHints.functionLikeReturnTypes.enabled": false,
 
   // ESLint Settings
   "eslint.workingDirectories": [
     {
-      "mode": "auto"
+      "pattern": "stacks/*/"
+    },
+    {
+      "pattern": "packages/*/"
     }
   ],
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
@@ -171,21 +169,42 @@
   // GitHub Copilot Settings
   "github.copilot.enable": {
     "*": true,
+    "yaml": true,
     "plaintext": false,
-    "markdown": true,
-    "scminput": false,
-    "yaml": true
+    "markdown": true
   },
   "cSpell.words": [
     "ARIG",
+    "avalaible",
+    "BIDV",
     "BOGD",
     "CAPITRON",
-    "Chinggis",
-    "CHINGISKHAAN",
-    "INVESCORE",
-    "Khaan",
+    "CHINGIS",
+    "CIMB",
+    "Coinsbuy",
+    "contacntno",
+    "Deeplink",
+    "Gursed",
+    "HIPAY",
+    "HLBBVNVX",
+    "HLBVN",
+    "Hongleong",
+    "INVESCORES",
     "KHAS",
-    "MOBI",
-    "TXNADD"
+    "Kycs",
+    "Leong",
+    "monxa",
+    "mymot",
+    "NAPAS",
+    "OPHELEO",
+    "PAYTOPAY",
+    "refno",
+    "scrt",
+    "Suhkbaatar",
+    "txndate",
+    "txndesc",
+    "UBCITY",
+    "Гурсед",
+    "Сухбаатар"
   ]
 }
