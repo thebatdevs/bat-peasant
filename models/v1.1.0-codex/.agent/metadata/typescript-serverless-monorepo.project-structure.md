@@ -1,28 +1,48 @@
-# TypeScript Serverless Monorepo Project Structure
+# TypeScript Serverless Monorepo Architecture
 
-Applies to repositories based on:
+Applies to `typescript-serverless-monorepo-template`.
 
-```text
-typescript-serverless-monorepo-template
-```
+## Architecture
 
-## Required Flow
-
-```text
+```txt
 Function Definition → Handler → Service → Repository → Database
 ```
 
-Dependencies flow inward only:
+Dependencies flow right only.
 
-```text
-Handler → Service → Repository
+**MUST NOT:**
+
+- Bypass, reverse, merge, or replace layers
+- Add architectural layers without approval
+- Perform unrelated restructuring
+
+### Dependencies
+
+Allowed:
+
+```txt
+function definition → handler path
+handler → service
+service → service
+service → repository
+repository → database client
+stack → shared package
+shared package → shared package
 ```
 
-Never bypass, reverse, or merge these layers.
+Forbidden:
+
+```txt
+function definition → runtime logic
+handler → repository / database client / DynamoDB SDK
+service → handler / DynamoDB SDK
+repository → service / handler
+shared package → stack
+```
 
 ## Root Structure
 
-```text
+```txt
 .
 ├── packages/
 ├── stacks/
@@ -32,37 +52,14 @@ Never bypass, reverse, or merge these layers.
 └── turbo.json
 ```
 
-### `stacks/`
+- `stacks/`: independently deployable applications and their domain logic
+- `packages/`: reusable, stack-independent code
 
-Contains independently deployable Serverless applications.
-
-Each stack owns its:
-
-- Lambda functions
-- Business logic
-- Repositories
-- Domain types
-- Infrastructure configuration
-- Environment configuration
-
-### `packages/`
-
-Contains reusable, stack-independent code.
-
-Examples:
-
-- Shared libraries
-- HTTP clients
-- Lambda invocation utilities
-- Schemas
-- AWS utilities
-- TypeScript configuration
-
-Do not place stack-specific business logic in `packages/`.
+Shared packages MUST NOT contain stack-specific logic or import from `stacks/`.
 
 ## Stack Structure
 
-```text
+```txt
 stacks/<stack-name>/
 ├── serverless.ts
 ├── env.ts
@@ -70,285 +67,272 @@ stacks/<stack-name>/
 ├── tsconfig.json
 ├── scripts/
 └── src/
-    ├── functions/
-    │   ├── api/
-    │   ├── workers/
-    │   └── tasks/
-    ├── services/
-    ├── repository/
-    └── types/
+├── functions/
+│   ├── api/
+│   ├── workers/
+│   └── tasks/
+├── services/
+├── repository/
+└── types/
 ```
 
-Optional directories must be created only when required.
+Create optional directories only when required.
 
 ## Function Definition
 
 Location:
 
-```text
+```txt
 src/functions/<trigger>/<domain>/index.ts
 ```
 
-Responsibilities:
+**MUST:**
 
-- Define Serverless function metadata
-- Define handler name
-- Define trigger configuration
-- Define route and HTTP method
-- Define timeout, memory, and other Lambda settings
+- Define function metadata
+- Define handler path and trigger
+- Define route, timeout, memory, and Lambda settings
 - Export a function map for `serverless.ts`
 
-Forbidden:
+**MUST NOT:**
 
-- Runtime logic
-- Input parsing
-- Business logic
-- Repository access
-- Database access
-
-`index.ts` contains metadata only.
+- Contain runtime or business logic
+- Parse input
+- Call services or repositories
+- Access databases
 
 ## Handler
 
 Location:
 
-```text
+```txt
 src/functions/<trigger>/<domain>/handler.ts
 ```
 
-Responsibilities:
+**MUST:**
 
 - Receive Lambda events
-- Parse transport input
-- Validate request schemas
+- Parse and validate transport input
 - Extract authentication and request metadata
-- Call service functions
-- Return transport responses
-- Use shared error and response handlers
+- Call services
+- Format transport responses
+- Use the shared HTTP wrapper for API handlers
 
-Forbidden:
+**MUST NOT:**
 
-- Business logic
-- Direct repository calls
-- Direct database access
-- Direct DynamoDB SDK usage
-- Reimplementing service rules
+- Contain business rules
+- Call repositories
+- Access databases
+- Import the DynamoDB SDK
+- Reimplement Service rules
 
-API handlers must use the established shared HTTP handler wrapper.
-
-Handlers must remain thin.
+Handlers remain thin and transport-focused.
 
 ## Service
 
 Location:
 
-```text
+```txt
 src/services/<domain>/<entity>-<operation>.ts
 ```
 
-Examples:
-
-```text
-example-item-create.ts
-example-item-get.ts
-example-item-update.ts
-```
-
-Responsibilities:
+**MUST:**
 
 - Execute one business operation
-- Apply business rules
-- Enforce domain conditions
-- Coordinate repositories
+- Apply business rules and domain conditions
+- Coordinate repositories and other services
+- Orchestrate workflows and integrations
 - Transform domain data
-- Call required external integrations
+- Throw business errors
 - Return transport-independent results
 
-Forbidden:
+**MUST NOT:**
 
-- Lambda event parsing
-- HTTP response formatting
-- Serverless configuration
-- Direct database access
-- Direct DynamoDB SDK usage
+- Parse Lambda events
+- Depend on API Gateway or Express request objects
+- Format HTTP responses
+- Access databases directly
+- Import the DynamoDB SDK
 
 Prefer one operation per file.
 
-Use:
+Repeated business lookups, guards, and validations belong in focused Service functions.
 
-```text
-src/services/<domain>/index.ts
+Examples:
+
+```ts
+getValidExampleItemById();
+validateExampleItemStatusTransition();
 ```
 
-only to export service operations.
+Pure data-shape validation belongs in schemas.
+
+Use `src/services/<domain>/index.ts` only as the domain's public export entry point.
 
 ## Repository
 
 Location:
 
-```text
+```txt
 src/repository/<domain>-repository.ts
 ```
 
-Responsibilities:
+**MUST:**
 
-- Access one database or domain aggregate
-- Execute persistence operations
-- Use the shared database client
-- Return typed persistence results
-- Map database records when necessary
+- Build domain-specific persistence requests
+- Execute them through the shared database client
+- Access DynamoDB, PostgreSQL, S3, or other persistence systems
+- Handle pagination
+- Map raw records to typed results
 
-Forbidden:
+**MUST NOT:**
 
-- Business rules
-- Request parsing
-- Response formatting
-- Calling handlers
-- Calling services
-- External API orchestration
+- Contain business rules or authorization decisions
+- Parse requests or format responses
+- Call handlers or services
 
-Prefer one repository file per domain aggregate.
+Prefer one repository per domain aggregate.
 
 ## DynamoDB Client
 
 Location:
 
-```text
+```txt
 src/repository/dynamo-client.ts
 ```
 
-Responsibilities:
+Centralises DynamoDB configuration and reusable typed operations.
 
-- Wrap low-level DynamoDB commands
-- Centralize database client configuration
-- Provide reusable typed database operations
-
-Domain repositories must use this client.
-
-Do not duplicate AWS SDK command logic across repository files.
+Domain repositories MUST use it. Do not duplicate AWS SDK command logic.
 
 ## Types and Schemas
 
-Stack-specific types and schemas belong in:
+Stack-specific types and schemas:
 
-```text
+```txt
 src/types/
 ```
 
-Cross-stack reusable types and schemas belong in the shared schemas package.
+Cross-stack reusable types and schemas belong in a shared package.
 
-Rules:
-
-- Transport schemas validate handler input.
-- Services enforce business conditions.
-- Repositories return typed persistence data.
-- Do not move stack-specific schemas into shared packages.
-- Do not duplicate shared schemas across stacks.
+- Transport schemas validate Handler input
+- Services enforce business conditions
+- Repositories return typed persistence data
+- Move schemas to shared packages only when genuinely reusable
+- Do not duplicate shared schemas across stacks
 
 ## Shared Packages
 
-Location:
-
-```text
+```txt
 packages/<package-name>/
 ├── package.json
 ├── tsconfig.json
 └── src/
-    └── index.ts
+└── index.ts
 ```
 
-A shared package must be:
+A shared package MUST:
 
-- Reusable by multiple stacks or packages
-- Independent from one stack's business logic
-- Independently buildable
-- Exported through its public entry point
+- Be reusable across stacks or packages
+- Be independent from stack-specific logic
+- Be independently buildable
+- Export through its public entry point
 
-Do not create a package for code used by only one stack.
+Do not create a shared package for single-stack code.
 
-Do not import stack code into a shared package.
+## Configuration
 
-## `serverless.ts`
+### `serverless.ts`
 
-Responsibilities:
+Defines:
 
-- Define service and provider configuration
-- Define runtime environment variables
-- Define infrastructure resources
-- Import function maps
-- Register functions
-- Configure packaging
-- Configure plugins and deployment settings
+- Service and provider configuration
+- Infrastructure resources
+- Runtime environment variables
+- Function registration
+- Packaging and plugins
 
-Forbidden:
+MUST NOT contain runtime, business, or database logic.
 
-- Handler implementation
-- Business logic
-- Database operations
-- Runtime request processing
+### `env.ts`
 
-Register functions by importing and spreading exported function maps.
+Validates deployment-time environment variables and exports typed configuration.
 
-## `env.ts`
-
-Responsibilities:
-
-- Validate deployment-time environment variables
-- Fail immediately when required values are missing or invalid
-- Export typed configuration values
-
-Do not read unvalidated deployment configuration throughout the stack.
-
-## Environment Variables
-
-Runtime resource names and configuration must be declared in `serverless.ts`.
-
-Repositories must read resource names through the established environment utility.
+Fail immediately when required values are missing or invalid.
 
 Never hardcode:
 
-- DynamoDB table names
-- Resource names
+- Table or resource names
 - AWS regions
 - Deployment stages
 - Secrets
 - Environment-specific URLs
 
-## Dependency Rules
+Repositories read resource names through the established environment utility.
 
-Allowed:
+## File and Naming Rules
 
-```text
-handler → service
-service → repository
-repository → database client
-stack → shared package
-shared package → another shared package
+- Use `kebab-case` filenames
+- Prefer one operation or responsibility per file
+- Split files exceeding 300 lines unless declarative or generated
+- Use `index.ts` only for public exports or function metadata
+- Do not import from a module's own `index.ts`
+- Avoid vague names such as `utils`, `helper`, `common`, and `functions`
+
+Preferred:
+
+```txt
+src/services/withdraw-request/
+├── index.ts
+├── withdraw-request-create.ts
+├── withdraw-request-get.ts
+├── withdraw-request-update.ts
+└── withdraw-request-validation.ts
 ```
 
-Forbidden:
+Use specific names following:
 
-```text
-handler → repository
-handler → database client
-service → handler
-service → DynamoDB SDK
-repository → service
-repository → handler
-shared package → stack
+```txt
+action + domain + condition/key
 ```
 
-## Strict Rules
+Good:
 
-- Function definition files contain metadata only.
-- Handlers call services only.
-- Services own business logic.
-- Services use repositories for persistence.
-- Repositories own database access only.
-- DynamoDB SDK operations remain in repository infrastructure.
-- Stack-specific logic remains inside its stack.
-- Shared packages contain reusable infrastructure only.
-- Preserve established naming and folder conventions.
-- Do not introduce another architectural layer without explicit approval.
-- Do not bypass a layer for convenience.
-- Do not perform unrelated restructuring.
+```ts
+approveWithdrawRequest();
+getWithdrawRequestById();
+getActiveWithdrawRequestsByEmail();
+```
+
+Avoid:
+
+```ts
+getData();
+processRequest();
+handleUpdate();
+helper();
+```
+
+## Canonical Vertical Slice
+
+```txt
+src/functions/api/example-item/
+├── index.ts
+└── handler.ts
+
+src/services/example-item/
+├── index.ts
+├── example-item-create.ts
+└── example-item-validation.ts
+
+src/repository/example-item-repository.ts
+src/types/example-item.ts
+```
+
+Flow:
+
+```ts
+handler validates input
+→ service applies business rules
+→ repository performs persistence
+→ database client executes commands
+```
