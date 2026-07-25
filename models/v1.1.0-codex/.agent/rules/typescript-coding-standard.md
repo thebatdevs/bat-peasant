@@ -1,42 +1,42 @@
-# Typescript serverless app coding standard
+# Coding Standard
 
-Purpose: define how agents must write, name, structure, validate, and layer code in this project.
+Purpose: define how agents write, name, validate, document, and handle errors.
 
-## Core Principles
+## Core Rules
 
 - Write clear, explicit, searchable TypeScript.
-- Prefer simple readable code over clever abstractions.
-- Keep functions small, focused, typed, and easy to test.
-- Use early returns. Avoid deep nesting.
-- Validate external input and important business input.
+- Prefer simple code over clever abstractions.
+- Keep functions small, focused, typed, and testable.
+- Use early returns; avoid deep nesting.
+- Validate external input and important outputs.
 - Throw meaningful errors.
-- Log errors with context using the shared `logErrorMessage(error, '<functionName>')` when available, If not implement it and export it from `src/libs`; do not duplicate local logging helpers.
-- Return validated domain objects with Zod `.parse()` when appropriate.
+- Avoid duplicated logic, hidden side effects, and unrelated changes.
 
-## Naming rule
+## Naming
 
-| Target       | Rule                       | Example                      |
-| ------------ | -------------------------- | ---------------------------- |
-| Files        | `kebab-case`               | `withdraw-request-create.ts` |
-| Functions    | accurate verb-based names  | `createWithdrawRequest()`    |
-| Services     | business behavior          | `approveWithdrawRequest()`   |
-| Repositories | data access                | `getWithdrawRequestById()`   |
-| Zod schemas  | `camelCase` + `Sch` suffix | `withdrawRequestSch`         |
-| Types        | `PascalCase`               | `WithdrawRequest`            |
-| Constants    | `SCREAMING_SNAKE_CASE`     | `KHAN_BANK_CODE`             |
-| Booleans     | state/question names       | `isActive`, `canWithdraw`    |
-| Arrays       | plural names               | `withdrawRequests`           |
+| Target    | Rule                     | Example                      |
+| --------- | ------------------------ | ---------------------------- |
+| Files     | `kebab-case`             | `withdraw-request-create.ts` |
+| Functions | specific verb-based name | `createWithdrawRequest()`    |
+| Schemas   | `camelCase` + `Sch`      | `withdrawRequestSch`         |
+| Types     | `PascalCase`             | `WithdrawRequest`            |
+| Constants | `SCREAMING_SNAKE_CASE`   | `KHAN_BANK_CODE`             |
+| Booleans  | state/question           | `isActive`, `canWithdraw`    |
+| Arrays    | plural noun              | `withdrawRequests`           |
 
 Common type suffixes:
 
 ```txt
+Input
+Output
 Body
 Params
 Query
+Context
 Config
 ```
 
-Name formula:
+Prefer:
 
 ```txt
 action + domain + condition/key
@@ -50,109 +50,138 @@ approveWithdrawRequest();
 validateUserPaymentAddress();
 ```
 
-Also avoid vague names like `data`, `item`, `process`, `handle`, `helper`, `utils`, and `common` unless the content is truly generic.
+Avoid vague names such as `data`, `item`, `process`, `handle`, `helper`, `utils`, and `common`.
 
 ## Function Rules
 
-Every exported function should:
+Exported functions MUST:
 
-- Have an accurate, specific name
-- Use explicit input and output types
-- Include JSDoc
-- Do one clear thing
-- Use only one `try/catch` in a single function
-- Log
-- Throw meaningful business errors
+- Have explicit input and output types
+- Perform one responsibility
+- Include useful JSDoc
+- Throw meaningful errors
 - Avoid hidden side effects
-- Return validated domain objects when possible
+- Return validated domain objects when appropriate
 
-JSDoc should include:
+Use object parameters for multiple inputs.
+Do not use `any`; use `unknown` and narrow safely.
 
-- purpose
-- process flow for complex functions
-- params
-- return value
-- expected thrown errors
+## Validation
 
-Preferred structure:
+Use Zod at trust boundaries:
+
+- Request input
+- Environment variables
+- External API responses
+- Important persistence or domain output
+
+```ts
+const input = inputSch.parse(rawInput);
+return resultSch.parse(result);
+```
+
+Pure shape validation belongs in schemas.
+Repeated business validation, lookup, and guard logic MUST be extracted into reusable focused functions:
+
+```ts
+const withdrawRequest = await getValidWithdrawRequestById(id);
+```
+
+## Errors and Logging
+
+Errors MUST be meaningful and use stable machine-readable codes.
+
+```ts
+throw new CustomError('Withdraw request not found', 404, 'WITHDRAW_REQUEST_NOT_FOUND');
+```
+
+`CustomError` lives in the shared error utilities. Do not invent alternative error classes.
+
+Use the shared logger from `src/libs` (or the shared package). Implement it once if missing.
+
+MUST NOT:
+
+- Duplicate logging helpers
+- Log the same error in multiple layers
+- Log secrets, tokens, credentials, or sensitive data
+- Expose raw database, AWS, or provider errors
+
+Use `try/catch` only when you need to log, translate, or recover:
+
+```ts
+try {
+  // operation
+} catch (error: unknown) {
+  logErrorMessage(error, 'functionName');
+  throw error;
+}
+```
+
+Prefer fewer, well-placed try/catch blocks over wrapping every statement.
+
+**Avoid nested try/catch blocks.**
+If additional error handling is needed inside or after an existing try/catch, extract that logic into a separate independent function that owns its own try/catch.
+
+### Traceable Business Logging
+
+Any function that updates state, performs validation with side effects, or contains multiple meaningful steps MUST emit clear, traceable logs using the shared logger.
+
+Log important intermediate states so the flow can be reconstructed later.
+
+Example (cancelling a deposit request):
+
+```ts
+logger.info(`Deposit request found: ${id} status: ${status}`);
+logger.info(`Deposit request status ${id} status changed ${status} to ${newStatus}`);
+```
+
+Logs MUST be:
+
+- Meaningful and human-readable
+- Structured (include relevant IDs and before/after values)
+- Free of sensitive data
+
+## JSDoc
+
+Exported functions MUST document:
+
+- Purpose
+- Parameters
+- Return value
+- Expected errors
+
+Add a short process flow only for complex functions:
 
 ```ts
 /**
- * Updates a withdraw request status after validating the current status transition.
+ * Updates a withdraw request after validating its status transition.
  *
- * Process flow:
- * 1. Gets the existing withdraw request by id.
- * 2. Validates that the requested status transition is allowed.
- * ...
+ * Process:
+ * 1. Load and validate the existing request
+ * 2. Check that the status transition is allowed
+ * 3. Persist the update and return the validated result
  *
- * @param input - Status update input.
- * @returns The updated withdraw request.
- * @throws CustomError when the withdraw request does not exist.
+ * @param input - Status update input
+ * @returns The validated updated request
+ * @throws CustomError when the request is missing or the transition is invalid
  */
-export async function updateWithdrawRequestStatus(input: Params): Promise<WithdrawRequest> {
-  try {
-    const withdrawRequest = await getValidWithdrawRequestById(input.withdrawRequestId);
-
-    validateWithdrawRequestStatusTransition({ currentStatus: withdrawRequest.status, nextStatus: input.nextStatus });
-    const updatedWithdrawRequest = await updateWithdrawRequestStatusRepo({ input });
-
-    return withdrawRequestSch.parse(updatedWithdrawRequest);
-  } catch (error: unknown) {
-    logErrorMessage(error, 'updateWithdrawRequestStatus');
-    throw error;
-  }
-}
 ```
 
-## File structure and size
-
-- Keep a single source file under **300 lines**.
-- Split large files by operation or responsibility.
-- Prefer operation-based files.
-- Avoid vague files like `utils.ts`, `helper.ts`, or `common.ts` unless truly generic.
-
-Good:
-
-```txt
-src/services/withdraw-request/
-  index.ts
-  withdraw-request-create.ts
-  withdraw-request-get.ts
-  withdraw-request-update.ts
-  withdraw-request-validation.ts
-```
-
-## Reusable Validation and Lookup Helpers
-
-Extract repeated lookup, validation, or guard logic into focused service-layer functions.
-
-Avoid repeating:
-
-```ts
-const withdrawRequest = await getWithdrawRequestById(withdrawRequestId);
-
-if (!withdrawRequest) {
-  throw new CustomError('Withdraw request not found', 404, 'WITHDRAW_REQUEST_NOT_FOUND');
-}
-```
-
-Prefer:
-
-```ts
-const withdrawRequest = await getValidWithdrawRequestById(withdrawRequestId);
-```
-
-Validation and lookup helpers should stay in the Service layer unless they are purely schema-level validation.
+Do not write JSDoc that only repeats the function name or TypeScript types.
 
 ## Agent Checklist
 
-Before writing or changing code, confirm:
+Before completing changes, confirm:
 
-- names are specific and searchable
-- exported functions have useful JSDoc
-- business logic is only in the Service layer
-- handlers only parse, validate, delegate, and format
-- repositories only perform data access
-- reusable validation or lookup logic is extracted
-- files are focused and under 300 lines when possible
-- errors are meaningful and logged with function context
+- Names are specific and searchable
+- Inputs and outputs are typed
+- Exported functions have useful JSDoc
+- External input is validated with Zod
+- Errors are meaningful and logged once
+- Multi-step / update / validation functions have meaningful traceable logs
+- Nested try/catch is avoided by extracting into separate functions
+- Repeated validation/guard logic is reused
+- Domain output is validated when appropriate
+- Handlers stay thin; services contain business logic
+- No DynamoDB SDK or database access outside repositories
+- No vague abstractions or unrelated changes were introduced
