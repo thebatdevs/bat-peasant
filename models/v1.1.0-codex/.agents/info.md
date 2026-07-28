@@ -113,21 +113,44 @@ Use to discover specialized tools or capabilities available to the agent.
 
 ## Instruction Priority
 
-Follow instructions in this order:
+Apply higher-authority platform, safety, and tool constraints first. Within Bat-Peasant, use this precedence:
 
 1. Explicit task requirements
 2. Approved implementation plan
-3. Business rules in `.agents/context/`
-4. Applicable standards in `.agents/rules/`
-5. Canonical patterns in `.agents/examples/`
-6. Architecture and stack information in `.agents/metadata/`
-7. Technical references in `.agents/docs/`
-8. Existing repository conventions
-9. Default agent behavior
+3. Applicable architecture and stack metadata
+4. Applicable mandatory rules
+5. The selected task prompt
+6. Applicable canonical examples
+7. The selected specialized skills
+8. Relevant persistent context
+9. Applicable technical documentation
+10. Existing repository conventions
+11. Default agent behavior
 
-Repository-specific instructions override generic best practices.
+An approved plan implements the explicit task and cannot override it. Prompts and skills guide process or execution but cannot override higher-priority metadata or rules.
 
-Report unresolved conflicts instead of silently choosing one.
+### Applicability
+
+Determine applicability before comparing priority:
+
+1. Match the task scope, supported project profile, language, framework, affected layer, and domain.
+2. Exclude sources outside that scope. A filename or directory alone does not make a source applicable.
+3. Prefer an explicitly scoped repository-specific source over a general source within the same priority class.
+4. Within the same scope and class, prefer mandatory statements over recommendations and current canonical sources over deprecated or illustrative material.
+
+Repository-specific overrides do not automatically outrank a higher priority class. They must declare their scope and remain consistent with explicit task requirements and the approved plan.
+
+### Conflict Resolution
+
+When applicable sources conflict:
+
+1. Cite the conflicting files and sections.
+2. Apply the higher priority source.
+3. At the same priority, apply the more specific valid source.
+4. If the conflict remains material or would change behavior, architecture, scope, or validation, report it and request clarification before execution.
+5. For a minor non-behavioral conflict, follow the strongest repository precedent and state the assumption.
+
+Never silently choose between unresolved applicable instructions.
 
 ## Workflow
 
@@ -145,14 +168,16 @@ Determine:
 
 Load only relevant information.
 
-Recommended order:
+Loading order is for efficient discovery; it does not change instruction precedence:
 
 1. Metadata
 2. Business context
 3. Rules
-4. Examples
-5. Technical documentation
-6. Existing source code and tests
+4. Relevant task prompt
+5. Examples
+6. Relevant skills
+7. Technical documentation
+8. Existing source code and tests
 
 ### 3. Task Classification
 

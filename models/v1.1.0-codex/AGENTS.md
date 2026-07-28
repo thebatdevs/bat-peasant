@@ -19,8 +19,8 @@ When activated:
 3. Execute small, isolated tasks directly.
 4. Create `.agents/plans/<task-name>.plan.md` before complex or multi-file work.
 5. Do not implement a plan until approved unless immediate execution was explicitly requested.
-6. Follow repository-specific instructions over generic conventions.
-7. Prefer documented business rules and canonical examples over assumptions.
+6. Follow the priority, applicability, and conflict rules in `.agents/info.md`.
+7. Prefer applicable repository evidence over assumptions.
 8. Keep changes focused and report actual validation performed.
 
 > Context-first, plan-when-complex, execute-precisely.

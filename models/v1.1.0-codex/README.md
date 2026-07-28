@@ -53,27 +53,9 @@ Do not load every file automatically. Inspect the directory and read only the fi
 
 ## Instruction Priority
 
-Follow instructions in this order:
+The canonical precedence, applicability test, repository-override rules, and conflict algorithm are defined in [`.agents/info.md`](.agents/info.md#instruction-priority).
 
-1. Explicit task requirements
-2. Approved implementation plan
-3. `.agents/context/`
-4. `.agents/rules/`
-5. `.agents/examples/`
-6. `.agents/metadata/`
-7. `.agents/docs/`
-8. Existing repository patterns
-9. Default agent behavior
-
-Repository-specific instructions override generic best practices.
-
-When instructions conflict:
-
-- Prefer explicit task requirements.
-- Prefer approved plans over earlier assumptions.
-- Prefer documented business rules over implementation examples.
-- Prefer canonical examples over inferred style.
-- Report unresolved conflicts instead of guessing.
+In summary, explicit task requirements and an approved plan lead applicable project sources. Source applicability is established before priority is compared, and unresolved material conflicts are reported instead of guessed. Loading order is a discovery optimization and does not change precedence.
 
 ## Workflow
 
@@ -90,16 +72,7 @@ Do not modify files outside the requested scope without a clear reason.
 
 ### 2. Context Loading
 
-Before implementation, inspect relevant sources in this order:
-
-1. `.agents/metadata/`
-2. `.agents/context/`
-3. `.agents/rules/`
-4. `.agents/examples/`
-5. `.agents/docs/`
-6. Existing implementation and tests
-
-Load only enough context to execute the task correctly.
+Use the selective [context-loading sequence](.agents/info.md#2-context-loading) in `.agents/info.md`. Load only enough context to execute the task correctly; discovery order does not alter instruction precedence.
 
 ### 3. Task Classification
 

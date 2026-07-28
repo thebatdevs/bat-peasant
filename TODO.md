@@ -194,7 +194,7 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 
 ### BP-002 — Establish one executable instruction priority
 
-- [ ] Complete this task
+- [x] Complete this task
 - **Priority:** Critical
 - **Category:** Workflow
 - **Affected paths:**
@@ -205,14 +205,16 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 - **Required result:** Document one unambiguous precedence and conflict-resolution algorithm consistent with the established v1.1.0-codex requirements, including prompts, docs, skills, and repository-specific overrides.
 - **Dependencies:** `BP-001`
 - **Acceptance criteria:**
-  - [ ] `.agents/info.md` defines the complete precedence once and explains how source applicability affects it.
-  - [ ] `AGENTS.md` remains concise and points to `.agents/info.md` for detailed priority rather than duplicating it.
-  - [ ] `README.md` summarizes or links to the canonical priority without presenting a conflicting list.
-  - [ ] Conflict handling requires reporting unresolved conflicts rather than silently choosing.
+  - [x] `.agents/info.md` defines the complete precedence once and explains how source applicability affects it.
+  - [x] `AGENTS.md` remains concise and points to `.agents/info.md` for detailed priority rather than duplicating it.
+  - [x] `README.md` summarizes or links to the canonical priority without presenting a conflicting list.
+  - [x] Conflict handling requires reporting unresolved conflicts rather than silently choosing.
 - **Evidence:**
-  - `models/v1.1.0-codex/.agents/info.md:114-130`
-  - `models/v1.1.0-codex/README.md:54-76`
-  - Neither priority list includes prompts or skills.
+  - Canonical precedence, applicability, overrides, and conflict handling: `models/v1.1.0-codex/.agents/info.md:114-153`.
+  - Loading-order/precedence distinction: `models/v1.1.0-codex/.agents/info.md:167-180`.
+  - README canonical links and summary: `models/v1.1.0-codex/README.md:54-58`.
+  - Concise entry-point routing: `models/v1.1.0-codex/AGENTS.md:17-24`.
+  - `AGENTS.md` remains 101 whitespace-delimited words, below the approximately-500-token budget.
 
 ### BP-003 — Complete the canonical activation and execution workflow
 
