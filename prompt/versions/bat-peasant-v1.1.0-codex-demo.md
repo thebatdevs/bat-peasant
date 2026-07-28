@@ -55,7 +55,7 @@ The `.agent` folder contains a group of markdowns that tells codex about my pref
 
 ## Example use case of this project
 
-Lets assume i asked codex to do TASK_A. Codex then determines if it needs planning or not. If the task is small (just one function.. etc), codex executes the task directly. And if the task updates multiple functions, multiple files, or if it asks to implement new feature, codex must first create an executable step by step plan .mn in `.agent/plan` folders and ask to user to review it. After user's approval codex executes the exact plan with additional context from `.agent/rules` folder's context.
+Lets assume i asked codex to do TASK_A. Codex then determines if it needs planning or not. If the task is small (just one function.. etc), codex executes the task directly. And if the task updates multiple functions, multiple files, or if it asks to implement new feature, codex must first create an executable step by step plan .mn in `.agents/plan` folders and ask to user to review it. After user's approval codex executes the exact plan with additional context from `.agents/rules` folder's context.
 
 Every implementation does not require testing and testing will be implemented in another codex thread.
 

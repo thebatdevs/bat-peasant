@@ -6,7 +6,7 @@
 
 > Context-first, plan-when-complex, Execute-precisely
 
-I will maintain a single `.agent/` directory at the root of every major repository (or monorepo). This folder acts as the agent's persistent memory and personality.
+I will maintain a single `.agents/` directory at the root of every major repository (or monorepo). This folder acts as the agent's persistent memory and personality.
 
 ## Directory structure
 
@@ -68,7 +68,7 @@ AGENTS.md                         # Main agent documentation & index
    - For small tasks (single function, small utility, bug fix in one file): Direct execution.
    - For anything that touches multiple files, changes architecture, or adds features: Mandatory planning phase.
 2. Planning phase (When needed)
-   - Codex must first output a plan in `.agent/plans/TASK-NAME.plan.md`
+   - Codex must first output a plan in `.agents/plans/TASK-NAME.plan.md`
    - Plan structure (enforced via prompt template): - Goal - Files to create/modify/delete
    - Key decisions & trade-offs
    - Risks
@@ -76,19 +76,19 @@ AGENTS.md                         # Main agent documentation & index
    - Testing considerations (even if tests are done separately)
 3. Execution
    - Codex executes exactly the approved plan.
-   - It must heavily reference .agent/rules/, .agent/examples/, and .agent/context/.
+   - It must heavily reference .agents/rules/, .agents/examples/, and .agents/context/.
    - After major changes, it should summarize what was done and suggest follow-up tasks (e.g., "Write tests in separate thread").
 4. Review
    - Testing is almost always done in a separate ChatGPT thread to keep context clean.
-   - PR review uses the dedicated review/pull-request.md prompt + full .agent/ context.
+   - PR review uses the dedicated review/pull-request.md prompt + full .agents/ context.
 
 ## Most frequent use cases (with recommended prompt starter)
 
-- New Feature: `.agent/prompt/implement-new-feature.md` template
-- Update Existing Feature: `.agent/prompt/maintenance/update-existing-feature.md` template
-- Debug/Fix Existing Feature: `.agent/prompt/maintenance/debug.md` template
-- Refactor: `.agent/prompt/maintenance/refactor.md` template
+- New Feature: `.agents/prompt/implement-new-feature.md` template
+- Update Existing Feature: `.agents/prompt/maintenance/update-existing-feature.md` template
+- Debug/Fix Existing Feature: `.agents/prompt/maintenance/debug.md` template
+- Refactor: `.agents/prompt/maintenance/refactor.md` template
 - Port from another repo: Provide source files + ask to follow current `.agent` standards
-- Write test: Reference examples in `.agent/examples` and `.agent/rules` for testing standards
+- Write test: Reference examples in `.agents/examples` and `.agents/rules` for testing standards
 - Analyze flow: USe context + examples
-- Small utility function: Reference examples in `.agent/examples` and `.agent/rules` for coding standards
+- Small utility function: Reference examples in `.agents/examples` and `.agents/rules` for coding standards
