@@ -165,22 +165,23 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 
 ### BP-001 — Formalize and verify the canonical `.agents/` path contract
 
-- [ ] Complete this task
+- [x] Complete this task
 - **Priority:** Critical
 - **Category:** Structure
 - **Affected paths:**
   - `models/v1.1.0-codex/AGENTS.md`
   - `models/v1.1.0-codex/README.md`
+  - `models/v1.1.0-codex/requirements.md`
   - `models/v1.1.0-codex/.agents/`
 - **Problem:** The current package consistently uses `.agents/`, but the canonical name is not yet expressed as a testable release requirement or protected against aliases, stale references, and missing documented targets. In particular, plan creation points to an absent `.agents/plans/` location.
 - **Required result:** Record `.agents/` as the canonical v1.1.0-codex persistent-context directory, verify every existing workflow reference uses it, prohibit the singular `.agent/` alias, and preserve the exact `##bat-peasant` activation contract. BP-004 owns creation and lifecycle documentation for missing required subdirectories.
 - **Dependencies:** `None`
 - **Acceptance criteria:**
-  - [ ] `requirements.md` identifies `.agents/` as the canonical persistent-context directory.
-  - [ ] No singular `.agent/` path or competing persistent-context alias is presented as v1.1.0-codex authority.
-  - [ ] Every existing workflow reference uses `.agents/`; missing documented subdirectories are explicitly assigned to BP-004.
-  - [ ] `AGENTS.md` directs activated Codex to `.agents/info.md` and directs complex plans to `.agents/plans/<task-name>.plan.md`.
-  - [ ] Tasks without `##bat-peasant` still explicitly use normal Codex behavior.
+  - [x] `requirements.md` identifies `.agents/` as the canonical persistent-context directory.
+  - [x] No singular `.agent/` path or competing persistent-context alias is presented as v1.1.0-codex authority.
+  - [x] Every existing workflow reference uses `.agents/`; missing documented subdirectories are explicitly assigned to BP-004.
+  - [x] `AGENTS.md` directs activated Codex to `.agents/info.md` and directs complex plans to `.agents/plans/<task-name>.plan.md`.
+  - [x] Tasks without `##bat-peasant` still explicitly use normal Codex behavior.
 - **Evidence:**
   - `models/v1.1.0-codex/AGENTS.md:17`
   - `models/v1.1.0-codex/AGENTS.md:20`
@@ -188,6 +189,8 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
   - `models/v1.1.0-codex/.agents/info.md:5`
   - The current package contains 29 files under `.agents/`.
   - `.agents/context/` and `.agents/plans/` are currently missing and remain BP-004 deliverables.
+  - Verified with `rg -n --hidden --glob '!TODO.md' '\.agent/' models/v1.1.0-codex` (no matches).
+  - Verified exact activation and inactive behavior in `AGENTS.md`; verified `.agents/info.md` and `.agents/plans/<task-name>.plan.md` routing.
 
 ### BP-002 — Establish one executable instruction priority
 
