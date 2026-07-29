@@ -272,7 +272,7 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 
 ### BP-005 — Document persistent context selection and maintenance
 
-- [ ] Complete this task
+- [x] Complete this task
 - **Priority:** High
 - **Category:** Documentation
 - **Affected paths:**
@@ -282,14 +282,16 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 - **Required result:** Implement the DR-001 policy as a focused context guide and, if justified, a minimal template/example that lets Codex create, discover, validate, update, and retire repository-specific context safely.
 - **Dependencies:** `BP-003`, `BP-004`, `DR-001`
 - **Acceptance criteria:**
-  - [ ] Context purpose, naming, required fields, ownership, source-of-truth boundary, and repository specificity are documented.
-  - [ ] Selection instructions load only task-relevant context.
-  - [ ] Freshness, stale-content, conflicting-content, and replace/append behavior are explicit.
-  - [ ] The policy states whether implementation history belongs in context and whether files are committed.
-  - [ ] Any context template/example is clearly non-normative and introduces no hidden rules.
+  - [x] Context purpose, naming, required fields, ownership, source-of-truth boundary, and repository specificity are documented.
+  - [x] Selection instructions load only task-relevant context.
+  - [x] Freshness, stale-content, conflicting-content, and replace/append behavior are explicit.
+  - [x] The policy states whether implementation history belongs in context and whether files are committed.
+  - [x] Any context template/example is clearly non-normative and introduces no hidden rules.
 - **Evidence:**
-  - `models/v1.1.0-codex/.agents/info.md:39-50`
-  - No `.agents/context/` content or context-specific template exists.
+  - Canonical policy: `models/v1.1.0-codex/.agents/context/README.md`.
+  - Non-normative scaffold: `models/v1.1.0-codex/.agents/context/_template.context.md`.
+  - Workflow routing: `models/v1.1.0-codex/.agents/info.md` under “Source Responsibilities” → “context/.”
+  - Verified required sections, fields, links, and non-normative labeling with the BP-005 static assertions documented in the implementation handoff.
 
 ### BP-006 — Replace the version README with adoption documentation
 

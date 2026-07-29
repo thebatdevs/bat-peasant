@@ -85,6 +85,8 @@ Business context determines what the system must do.
 
 Select context by the affected domain, entity, business rule, or workflow.
 
+Use [`.agents/context/**.md`](context/README.md) for the canonical context naming, format, ownership, freshness, update, conflict, and retirement policy. Do not treat the context template as repository facts.
+
 ### `rules/`
 
 Use to understand:
