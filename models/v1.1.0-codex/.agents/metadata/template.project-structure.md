@@ -1,0 +1,40 @@
+# PROJECT NAME: Project Structure
+
+> Authoring template only. Replace every placeholder, remove this notice, and rename the file to `<profile-id>.project-structure.md`. This template contains no repository facts.
+
+## Profile
+
+- **Profile ID:** `replace-with-profile-id`
+- **Project type:** REPLACE WITH THE PROJECT STRUCTURE THIS FILE DESCRIBES.
+
+## Architecture and Dependency Direction
+
+REPLACE WITH THE CANONICAL ARCHITECTURAL FLOW, ALLOWED DEPENDENCIES, AND PROHIBITED DEPENDENCIES.
+
+## Root Structure
+
+REPLACE WITH THE REQUIRED ROOT-LEVEL FILES AND DIRECTORIES AND THEIR RESPONSIBILITIES.
+
+## Application or Module Structure
+
+REPLACE WITH THE INTERNAL STRUCTURE OF EACH APPLICATION, SERVICE, MODULE, OR DEPLOYABLE UNIT.
+
+## Layer Locations and Responsibilities
+
+REPLACE WITH EACH LAYER'S LOCATION, RESPONSIBILITY, AND DEPENDENCY BOUNDARIES.
+
+## Shared Code, Types, and Schemas
+
+REPLACE WITH WHERE SHARED CODE, DOMAIN TYPES, TRANSPORT TYPES, AND VALIDATION SCHEMAS BELONG.
+
+## Infrastructure and Configuration
+
+REPLACE WITH INFRASTRUCTURE, ENVIRONMENT, BUILD, AND RUNTIME CONFIGURATION LOCATIONS.
+
+## Structural Naming and Placement
+
+REPLACE WITH PROJECT-SPECIFIC DIRECTORY, MODULE, PACKAGE, AND FILE PLACEMENT CONVENTIONS.
+
+## Related Rules and Documentation
+
+REPLACE WITH LINKS TO REUSABLE RULES AND TECHNICAL DOCUMENTATION. DO NOT DUPLICATE THEIR CONTENT.

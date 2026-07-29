@@ -46,7 +46,7 @@ These defaults minimize release scope and rework. An owner may choose another do
 | DR-001   | Commit curated current-state context; require source, owner, and freshness; replace stale facts                                             | Keeps repository memory reviewable without turning it into history       |
 | DR-002   | Ignore generated plans; commit the template and explicitly selected architectural plans only                                                | Avoids repository noise while preserving durable decisions               |
 | DR-003   | Treat `variants/` as development input, consolidate supported authority under `.agents/`, then exclude shadow copies from release authority | Removes the second source of truth                                       |
-| DR-004   | Ship one TypeScript Serverless monorepo profile; document the framework as extensible                                                       | Produces the shortest credible release path                              |
+| DR-004   | Repository owners install exactly one matching metadata pair selected for their project                                                     | Keeps profile choice explicit and owner-controlled                       |
 | DR-005   | Risk-based testing; run relevant existing tests when proportionate and report every deferral                                                | Preserves validation without imposing an unsupported universal test rule |
 
 ### Optimized Critical Path
@@ -306,7 +306,7 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 - **Dependencies:** `BP-003`, `BP-004`, `BP-008`, `DR-003`, `DR-004`
 - **Acceptance criteria:**
   - [ ] The version README title and version are correct.
-  - [ ] It includes prerequisites, installation/adoption steps, installed tree, metadata-profile selection, exact activation/inactive examples, first-use validation, and uninstall/update boundaries.
+  - [ ] It includes prerequisites, installation/adoption steps, installed tree, manual metadata-pair configuration, exact activation/inactive examples, first-use validation, and uninstall/update boundaries.
   - [ ] It links rather than duplicates detailed `.agents/info.md` workflow text.
   - [ ] It includes migration guidance from v1.0.0 or links to BP-023 output.
   - [ ] It states known limitations and the role of `requirements.md`.
@@ -336,26 +336,28 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
   - `models/v1.1.0-codex/requirements.md` is one line and four words.
   - `notes/v1.1.0-requirements.md` only adds “There are multiple rules,” so it is not a sufficient release contract.
 
-### BP-008 — Define metadata discovery and profile selection
+### BP-008 — Define metadata pair discovery and validation
 
-- [ ] Complete this task
+- [x] Complete this task
 - **Priority:** High
 - **Category:** Metadata
 - **Affected paths:**
   - `models/v1.1.0-codex/.agents/info.md`
   - `models/v1.1.0-codex/.agents/metadata/`
-- **Problem:** The version has only a TypeScript Serverless monorepo metadata pair in `.agents/`; no naming contract, metadata schema, profile matching rules, applicability/fallback behavior, validation, or reusable template is documented.
-- **Required result:** Define how Codex discovers a compatible project-structure/tech-stack pair, verifies applicability from repository evidence, loads only that pair, and handles unsupported or ambiguous repositories.
+- **Problem:** The version has only a TypeScript Serverless monorepo metadata pair in `.agents/`; no naming contract, metadata schema, installed-pair discovery rules, configuration-error behavior, validation, or reusable template is documented.
+- **Required result:** Define how Codex discovers the repository-owner-selected project-structure/tech-stack pair from the installed `.agents/metadata/` files, loads only that pair, and reports missing or ambiguous configuration.
 - **Dependencies:** `BP-003`, `DR-004`
 - **Acceptance criteria:**
-  - [ ] A deterministic filename/profile convention pairs project-structure and tech-stack metadata.
-  - [ ] Selection criteria use observable repository signals and prohibit silently applying a mismatched profile.
-  - [ ] Ambiguous or unsupported projects trigger a documented clarification/fallback path.
-  - [ ] Required metadata sections and rule/prompt separation boundaries are documented.
-  - [ ] A reusable metadata template or equally executable authoring specification exists.
+  - [x] A deterministic filename/profile convention pairs project-structure and tech-stack metadata.
+  - [x] Discovery uses the owner-curated installed files and prohibits inferring or silently applying another pair.
+  - [x] Missing, mismatched, or duplicate installed metadata triggers a documented configuration-error path.
+  - [x] Required metadata sections and rule/prompt separation boundaries are documented.
+  - [x] Reusable authoring templates exist and are explicitly excluded from runtime metadata discovery.
 - **Evidence:**
-  - `models/v1.1.0-codex/.agents/metadata/` contains only `typescript-serverless-monorepo.project-structure.md` and `.tech-stack.md`.
-  - `.agents/info.md:27-37` describes metadata purpose but not discovery or selection.
+  - Owner-configured installation, pairing convention, runtime discovery, configuration errors, content boundaries, and authoring: `models/v1.1.0-codex/.agents/metadata/README.md`.
+  - Authoring templates: `models/v1.1.0-codex/.agents/metadata/template.project-structure.md` and `template.tech-stack.md`.
+  - Canonical workflow routing: `models/v1.1.0-codex/.agents/info.md` under “Source Responsibilities” → “metadata/.”
+  - Verified installed-pair completeness, guide links, required sections, template labeling, and runtime exclusion with the BP-008 static assertions documented in the implementation handoff.
 
 ### BP-009 — Reconcile supported project metadata and architecture terminology
 
@@ -706,7 +708,7 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 - **Dependencies:** `BP-005`, `BP-006`, `BP-009`, `BP-010`, `BP-012`, `BP-015`, `BP-017`, `BP-018`, `BP-020`, `BP-022`, `DR-001`, `DR-004`, `DR-005`
 - **Acceptance criteria:**
   - [ ] Installation produces the documented tree with no missing references.
-  - [ ] Metadata profile selection succeeds from observable repository evidence.
+  - [ ] Metadata discovery succeeds from the single matching owner-installed project-structure/tech-stack pair.
   - [ ] One direct workflow and one approved planned workflow complete with documented validation.
   - [ ] The representative Function Definition → Handler → Service → Repository → Database slice respects all boundaries and compiles/tests as required by DR-005.
   - [ ] Migration guidance maps legacy `.ai/` responsibilities to v1.1.0-codex, identifies content requiring human review, and preserves existing valid repository rules.
@@ -805,6 +807,8 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 
 ### DR-004 — Officially supported project profiles
 
+- **Decision:** Repository owners manually install only the metadata pair applicable to their project; runtime selection is the single matching pair present under `.agents/metadata/`.
+- **Status:** Selected for v1.1.0-codex by owner correction after BP-008.
 - **Question:** Does v1.1.0-codex officially support only TypeScript Serverless monorepos, both monorepo and single-project TypeScript Serverless repositories, or a broader language-agnostic framework with only one bundled profile?
 - **Why it matters:** Metadata selection, installation instructions, validation fixtures, and release claims depend on the supported-profile boundary.
 - **Affected paths:**

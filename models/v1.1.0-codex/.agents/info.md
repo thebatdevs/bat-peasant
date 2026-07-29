@@ -69,7 +69,7 @@ Use to understand:
 
 Inspect relevant metadata before making structural or architectural decisions.
 
-Select the metadata pair whose declared project profile and stack match the repository. If no supported profile matches, do not borrow a near match silently; report the unsupported profile and use verified repository evidence only for work that does not depend on the missing guidance.
+Use [`.agents/metadata/README.md`](metadata/README.md) to discover the repository-owner-selected metadata. Load the single installed `*.project-structure.md` file and its matching `*.tech-stack.md` file. If either file is missing, their profile IDs differ, or multiple candidates exist, report the configuration error instead of selecting or inferring a profile.
 
 ### `context/`
 
