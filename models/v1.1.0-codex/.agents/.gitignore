@@ -1,0 +1,8 @@
+# Generated task plans are local by default.
+plans/*.plan.md
+
+# Owner-selected architectural plans are durable exceptions.
+!plans/*.architecture.plan.md
+
+# Runtime artifacts are always local and reproducible.
+runtime/

@@ -245,7 +245,7 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 
 ### BP-004 — Define and create the canonical persistent directory layout
 
-- [ ] Complete this task
+- [x] Complete this task
 - **Priority:** High
 - **Category:** Structure
 - **Affected paths:**
@@ -256,15 +256,17 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 - **Required result:** After DR-001 through DR-003 are resolved, make the filesystem match the documented canonical layout, explicitly label required/optional directories, and document committed/generated/runtime ownership without deleting valid rules.
 - **Dependencies:** `BP-001`, `DR-001`, `DR-002`, `DR-003`
 - **Acceptance criteria:**
-  - [ ] Every required directory documented in `.agents/info.md` exists in the distributable package.
-  - [ ] Optional directories are identified as optional and have creation conditions.
-  - [ ] Generated plans, persistent context, and temporary/runtime artifacts have distinct documented locations and source-control policies.
-  - [ ] `variants/` has one documented role and is not an ambiguous second canonical tree.
-  - [ ] Every retained directory is reachable from installation or workflow documentation.
+  - [x] Every required directory documented in `.agents/info.md` exists in the distributable package.
+  - [x] Optional directories are identified as optional and have creation conditions.
+  - [x] Generated plans, persistent context, and temporary/runtime artifacts have distinct documented locations and source-control policies.
+  - [x] `variants/` has one documented role and is not an ambiguous second canonical tree.
+  - [x] Every retained directory is reachable from installation or workflow documentation.
 - **Evidence:**
-  - `models/v1.1.0-codex/.agents/info.md:13-23` documents `context/` and `plans/`.
-  - Neither `models/v1.1.0-codex/.agents/context/` nor `models/v1.1.0-codex/.agents/plans/` exists.
-  - `models/v1.1.0-codex/variants/` mirrors `.agents/` but is not mentioned by `AGENTS.md`, `.agents/info.md`, `README.md`, or `requirements.md`.
+  - Required/optional layout, creation conditions, ownership, and source-control policy: `models/v1.1.0-codex/.agents/info.md` under “Directory Map.”
+  - Required empty directories ship through `models/v1.1.0-codex/.agents/context/.gitkeep` and `models/v1.1.0-codex/.agents/plans/.gitkeep`.
+  - Generated plan and runtime ignore policy: `models/v1.1.0-codex/.agents/.gitignore`.
+  - Development-only role and release-authority boundary: `models/v1.1.0-codex/variants/README.md`.
+  - Verified required directories and ignore behavior with the BP-004 static assertions documented in the implementation handoff.
 
 ## Documentation and Metadata
 
@@ -740,6 +742,8 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 
 ### DR-001 — Persistent context ownership and lifecycle
 
+- **Decision:** Commit curated current-state context; require named sources, owners, and freshness; replace stale facts instead of preserving implementation history.
+- **Status:** Selected for v1.1.0-codex by executing BP-004 with the recommended default.
 - **Question:** Should `.agents/context/` be committed, ignored, or selectively committed, and how are ownership, freshness, replacement/append behavior, history, and conflicts handled?
 - **Why it matters:** Context cannot be safely created or maintained until its source-of-truth and stale-data behavior are defined.
 - **Affected paths:**
@@ -758,6 +762,8 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 
 ### DR-002 — Plan source-control and lifecycle policy
 
+- **Decision:** Ignore generated plans; commit the plan template and explicitly selected architectural plans only.
+- **Status:** Selected for v1.1.0-codex by executing BP-004 with the recommended default.
 - **Question:** Are plans committed, ignored, or selectively committed, and what are the rules for active-plan count, updates, completion, archival, and deletion?
 - **Why it matters:** The documented “committed selectively or ignored” statement is not executable and the plan directory does not exist.
 - **Affected paths:**
@@ -775,6 +781,8 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 
 ### DR-003 — Role of the `variants/` tree
 
+- **Decision:** Treat `variants/` as development-only reference input, consolidate supported authority under `.agents/`, and exclude shadow copies from installed/release authority.
+- **Status:** Selected for v1.1.0-codex by executing BP-004 with the recommended default.
 - **Question:** Is `models/v1.1.0-codex/variants/` an install source, optional profile library, development staging area, or accidental duplicate?
 - **Why it matters:** The tree shadows `.agents/`, includes unique single-project metadata, and contains empty or divergent copies; without a decision, Codex and maintainers cannot know which source is authoritative.
 - **Affected paths:**

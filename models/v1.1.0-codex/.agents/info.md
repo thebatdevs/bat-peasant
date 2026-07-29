@@ -28,15 +28,32 @@ The repository-root `AGENTS.md` is only the concise activation and routing entry
 
 ```text
 .agents/
-├── context/    # Business rules, domain behavior, and workflows
-├── docs/       # Internal libraries, APIs, infrastructure, and references
-├── examples/   # Canonical implementation and usage patterns
-├── metadata/   # Project structure, technology, and version
-├── plans/      # Generated implementation plans
-├── prompts/    # Task-specific workflow templates
-├── rules/      # Coding, layering, framework, and testing standards
-└── skills/     # Available capabilities and skill metadata
+├── context/    # Required; committed current-state repository knowledge
+├── docs/       # Required; technical references
+├── examples/   # Required; canonical implementation patterns
+├── metadata/   # Required; project profile and stack
+├── plans/      # Required; generated plans and committed plan assets
+├── prompts/    # Required; task workflow templates
+├── rules/      # Required; implementation standards
+├── runtime/    # Optional; ignored temporary/runtime artifacts
+└── skills/     # Required; specialized capabilities
 ```
+
+The distributable package must include every directory marked required. `runtime/` is optional and must be created only when an activated workflow needs temporary, reproducible artifacts that do not belong in source code, persistent context, or a plan. Workflows may create further subdirectories inside a required directory only when their canonical instructions define the contents and ownership.
+
+### Ownership and Source Control
+
+| Content                       | Canonical location                  | Ownership                                       | Source-control policy                                                                                                                                                                  |
+| ----------------------------- | ----------------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Persistent repository context | `.agents/context/`                  | Repository maintainers and named context owners | Commit curated current-state facts. Require source, owner, and freshness metadata; BP-005 defines the maintenance format.                                                              |
+| Generated task plans          | `.agents/plans/<task-name>.plan.md` | Task author while active                        | Ignore by default. Commit only an explicitly selected architectural plan using the `*.architecture.plan.md` suffix. The committed template and full lifecycle are BP-020 deliverables. |
+| Temporary/runtime artifacts   | `.agents/runtime/`                  | The workflow that creates them                  | Never commit. Create on demand, keep artifacts reproducible, and remove them when no longer needed.                                                                                    |
+
+Do not place generated plans or runtime artifacts in `context/`. Do not use runtime output as durable repository knowledge.
+
+### Development Inputs
+
+The package's `variants/` directory is development-only reference input for maintainers. It is not installed into consumer repositories, is not searched by activated workflows, and never overrides `.agents/`. Supported content must be consolidated under `.agents/` before release; shadow copies under `variants/` have no release authority. See [`../variants/README.md`](../variants/README.md) for its retention boundary.
 
 ## Source Responsibilities
 
@@ -133,7 +150,7 @@ Store complex-task plans at:
 .agents/plans/<task-name>.plan.md
 ```
 
-Plans may be committed selectively or ignored by Git.
+Generated task plans are ignored by default. Commit only the template or an owner-selected architectural plan allowed by [Ownership and Source Control](#ownership-and-source-control).
 
 ### `skills/`
 
