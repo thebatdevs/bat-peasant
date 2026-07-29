@@ -218,7 +218,7 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 
 ### BP-003 — Complete the canonical activation and execution workflow
 
-- [ ] Complete this task
+- [x] Complete this task
 - **Priority:** Critical
 - **Category:** Workflow
 - **Affected paths:**
@@ -228,16 +228,20 @@ The sections below preserve the audit evidence and acceptance criteria. Use the 
 - **Required result:** Make `.agents/info.md` the complete canonical workflow while keeping `AGENTS.md` a sub-500-token activation and routing entry point.
 - **Dependencies:** `BP-001`, `BP-002`
 - **Acceptance criteria:**
-  - [ ] `.agents/info.md` states exact-marker activation and normal inactive behavior.
-  - [ ] It states “Context-first, plan-when-complex, execute-precisely.”
-  - [ ] It defines intake, selective loading, direct/planned classification, plan approval, execution, deviation handling, validation, and completion reporting.
-  - [ ] It documents metadata/rule/example/prompt/skill/context selection and missing-context behavior.
-  - [ ] It requires clarification for unsupported material assumptions and permits stated, evidence-backed minor assumptions.
-  - [ ] It explicitly limits `AGENTS.md` to activation/routing and prohibits duplicating the full workflow there.
-  - [ ] `AGENTS.md` remains under approximately 500 tokens after changes.
+  - [x] `.agents/info.md` states exact-marker activation and normal inactive behavior.
+  - [x] It states “Context-first, plan-when-complex, execute-precisely.”
+  - [x] It defines intake, selective loading, direct/planned classification, plan approval, execution, deviation handling, validation, and completion reporting.
+  - [x] It documents metadata/rule/example/prompt/skill/context selection and missing-context behavior.
+  - [x] It requires clarification for unsupported material assumptions and permits stated, evidence-backed minor assumptions.
+  - [x] It explicitly limits `AGENTS.md` to activation/routing and prohibits duplicating the full workflow there.
+  - [x] `AGENTS.md` remains under approximately 500 tokens after changes.
 - **Evidence:**
-  - `models/v1.1.0-codex/.agents/info.md:1-259`
-  - `models/v1.1.0-codex/AGENTS.md` is 101 words and contains activation, but `.agents/info.md` contains no `##bat-peasant` marker or core-principle text.
+  - Canonical activation, inactive behavior, core principle, and entry-point boundary: `models/v1.1.0-codex/.agents/info.md`.
+  - Source selection and missing-context behavior: `models/v1.1.0-codex/.agents/info.md` under “Source Responsibilities” and “Context Loading.”
+  - Direct/planned classification, approval, execution deviations, validation, and completion reporting: `models/v1.1.0-codex/.agents/info.md` under “Workflow.”
+  - Material and minor assumption handling: `models/v1.1.0-codex/.agents/info.md` under “Decision Boundaries.”
+  - Verified exact marker parity with `rg -n --fixed-strings '##bat-peasant' models/v1.1.0-codex/AGENTS.md models/v1.1.0-codex/.agents/info.md`.
+  - Verified `models/v1.1.0-codex/AGENTS.md` remains 101 whitespace-delimited words with `wc -w`, below the approximately-500-token budget.
 
 ### BP-004 — Define and create the canonical persistent directory layout
 

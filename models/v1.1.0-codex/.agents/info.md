@@ -8,6 +8,22 @@ It defines how the agent should understand, plan, implement, validate, and revie
 
 Read only files relevant to the current task. Do not load the entire directory by default.
 
+## Activation and Entry-Point Contract
+
+Bat-Peasant activates only when the task contains the exact marker:
+
+```text
+##bat-peasant
+```
+
+Without that exact marker, use normal agent behavior and do not apply this workflow merely because `.agents/` exists.
+
+When activated, follow this core principle:
+
+> Context-first, plan-when-complex, execute-precisely.
+
+The repository-root `AGENTS.md` is only the concise activation and routing entry point. It must state the exact marker, inactive behavior, the core principle, and where to find this canonical workflow. Keep detailed source-selection, priority, planning, execution, validation, and reporting guidance in this file; do not duplicate the full workflow in `AGENTS.md`.
+
 ## Directory Map
 
 ```text
@@ -36,6 +52,8 @@ Use to understand:
 
 Inspect relevant metadata before making structural or architectural decisions.
 
+Select the metadata pair whose declared project profile and stack match the repository. If no supported profile matches, do not borrow a near match silently; report the unsupported profile and use verified repository evidence only for work that does not depend on the missing guidance.
+
 ### `context/`
 
 Use to understand:
@@ -47,6 +65,8 @@ Use to understand:
 - Shared business patterns
 
 Business context determines what the system must do.
+
+Select context by the affected domain, entity, business rule, or workflow.
 
 ### `rules/`
 
@@ -61,6 +81,8 @@ Use to understand:
 
 Rules determine how the implementation must be written.
 
+Select rules by their declared language, framework, layer, and task scope. Mandatory applicable rules remain binding even when an example differs.
+
 ### `examples/`
 
 Use as the highest-signal reference for:
@@ -72,6 +94,8 @@ Use as the highest-signal reference for:
 - Expected usage of internal libraries
 
 Prefer canonical examples over inferred or generic patterns unless they conflict with explicit business rules.
+
+Select examples that match the affected layer and operation. Treat examples as implementation evidence, not as authority for undocumented business behavior.
 
 ### `docs/`
 
@@ -85,6 +109,8 @@ Use when working with:
 
 Do not guess an internal API when documentation exists.
 
+Select documentation for each internal package, API, integration, or infrastructure component touched by the task.
+
 ### `prompts/`
 
 Use the relevant template for the task type, including:
@@ -96,6 +122,8 @@ Use the relevant template for the task type, including:
 - Migration
 - Context documentation
 - Pull-request review
+
+Select one primary prompt whose task type most specifically matches the requested outcome. Use additional prompts only for distinct secondary work, and state which prompt governs each part. If no prompt matches, continue from this canonical workflow rather than forcing an unrelated template.
 
 ### `plans/`
 
@@ -110,6 +138,8 @@ Plans may be committed selectively or ignored by Git.
 ### `skills/`
 
 Use to discover specialized tools or capabilities available to the agent.
+
+Select a skill only when its declared activation conditions and required inputs match the task. Read its complete instructions before use, follow its validation and output contract, and do not invoke a similarly named skill as a substitute. If a required skill is missing or unusable, report that limitation and continue only when an in-scope, validated alternative exists.
 
 ## Instruction Priority
 
@@ -158,11 +188,16 @@ Never silently choose between unresolved applicable instructions.
 
 Determine:
 
+- Whether the exact activation marker is present
 - Requested outcome
 - Affected domain or feature
 - Expected scope
-- Relevant `.agents/` files
+- Applicable project profile, language, framework, and layers
+- Relevant `.agents/` sources and existing repository evidence
+- Missing requirements, context, or capabilities
 - Whether planning is required
+
+Restate material constraints when necessary. Do not expand the requested scope while resolving intake.
 
 ### 2. Context Loading
 
@@ -179,6 +214,21 @@ Loading order is for efficient discovery; it does not change instruction precede
 7. Technical documentation
 8. Existing source code and tests
 
+For every source class:
+
+1. Inspect available filenames, indexes, or frontmatter without treating every discovered file as applicable.
+2. Select files using the scope rules under [Source Responsibilities](#source-responsibilities) and [Applicability](#applicability).
+3. Record the files that materially guide the work.
+4. Stop loading when the task can be classified and executed without unsupported material assumptions.
+
+If an expected file or directory is absent, empty, stale, contradictory, or does not cover the task:
+
+1. Search applicable repository source, tests, configuration, and history available in the working copy for authoritative evidence.
+2. Do not invent business behavior, APIs, architecture, validation expectations, or tool capabilities.
+3. Request clarification before proceeding when the gap would materially affect behavior, architecture, scope, security, data, compatibility, or acceptance.
+4. For a minor, reversible detail, use the strongest current evidence, state the assumption, and include how it will be validated.
+5. Report the missing or deficient context at completion; suggest a focused knowledge-base update without making it unless documentation maintenance is in scope.
+
 ### 3. Task Classification
 
 #### Direct execution
@@ -192,6 +242,8 @@ Execute directly when the task is clear, isolated, and low-risk, such as:
 - A minor configuration or message change
 
 Relevant rules and examples still apply.
+
+Before direct execution, state the intended change, relevant sources, and validation. Direct execution does not waive intake, selective loading, or completion reporting.
 
 #### Planning required
 
@@ -216,7 +268,9 @@ The plan must include:
 - Execution order
 - Validation and testing considerations
 
-Do not implement before approval unless the user explicitly requests planning and execution together.
+Present the plan for approval before implementation. Approval must come from the user or other explicitly authorized approver and must identify the plan or clearly accept its proposed scope. Silence, unrelated feedback, or approval of a different plan is not approval.
+
+Do not implement before approval unless the user explicitly requests planning and execution together. In that case, the request supplies execution authorization, but the plan must still be created and followed before implementation begins.
 
 ### 4. Execution
 
@@ -231,7 +285,14 @@ During implementation:
 - Do not silently change business behavior.
 - Do not invent missing requirements.
 - Do not perform unrelated cleanup.
-- Report necessary deviations from the plan.
+- Preserve evidence for material decisions and assumptions.
+
+When execution must deviate from an approved plan:
+
+1. Stop before the deviation when it changes behavior, architecture, scope, risk, dependencies, files, or validation materially.
+2. Explain the cause, impact, and proposed plan update, then obtain approval.
+3. Apply minor, non-behavioral deviations only when they are necessary, reversible, and consistent with higher-priority instructions; record them in the plan or completion report.
+4. Never use a deviation to bypass an unresolved requirement or conflict.
 
 ### 5. Validation
 
@@ -249,6 +310,8 @@ Never claim a check was completed unless it was actually run.
 
 Testing may be performed separately, but every plan must consider it.
 
+Validate each stated assumption where practical. If a required check cannot run, report the exact check, reason, and resulting risk; do not substitute an unrun check with confidence or prose review.
+
 ### 6. Completion
 
 Report:
@@ -258,6 +321,7 @@ Report:
 - Validation performed
 - Deviations from the approved plan
 - Remaining risks or assumptions
+- Missing, stale, or conflicting context encountered
 - A relevant follow-up task when useful
 
 ## Decision Boundaries
@@ -268,8 +332,11 @@ Request clarification when:
 - `.agents/` instructions conflict.
 - A significant architectural decision has no precedent.
 - The task requires replacing an established pattern.
+- A material assumption is unsupported by applicable context or repository evidence.
 
-For minor ambiguity, follow the strongest repository precedent and state the assumption.
+Material assumptions include choices that can change behavior, architecture, scope, security, data, compatibility, public interfaces, or acceptance criteria. Request clarification before implementing them.
+
+For a minor, reversible ambiguity, use the strongest applicable and current repository evidence. State the assumption, cite the evidence supporting it, and explain or perform proportionate validation. If evidence is insufficient, treat the assumption as material and request clarification.
 
 ## Continuous Improvement
 
